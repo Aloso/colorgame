@@ -3,20 +3,16 @@
 import 'core-js/features/promise'
 import 'regenerator-runtime/runtime'
 
-// You can import all polyfills at once.
-// Note that this is a lot of code, which can increase page load times:
-//   import 'core-js'
-
-// You can import modules dynamically:
-// import(/* webpackChunkName: "foo" */ './foo').then((foo) => ...)
-
-
-// Import stylesheets!
-// NOTE: Styles are extracted to a CSS file during the build process.
 import './index.sass'
 
-// enable hot reloading for this module:
-if (module.hot) module.hot.accept()
+import { start } from './app/app'
+import { byId } from './app/dom/dom-helper'
 
-// Run `npm start` and open localhost:9000, then modify this string:
-document.getElementById('app')!.textContent = 'Hello world!'
+if (module.hot) {
+  module.hot.accept()
+  module.hot.addDisposeHandler(() => {
+    byId('overlays', HTMLElement).innerHTML = ''
+  })
+}
+
+start()
