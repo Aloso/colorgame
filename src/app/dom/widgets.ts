@@ -1,6 +1,6 @@
-import { byId, div, HtmlContent } from './dom-helper'
+import { byId } from './dom-helper'
 
-export interface IWidget {
+export interface Widget {
   readonly name: string
   readonly node: HTMLElement
 
@@ -8,21 +8,17 @@ export interface IWidget {
   onHide?(): void
 }
 
-export interface IOverlay extends IWidget {
+export interface Overlay extends Widget {
   isOverlay: true
 }
 
-export function isOverlay(widget: IWidget): widget is IOverlay {
-  return 'isOverlay' in widget
-}
 
-
-let visibleWidgets: IWidget[] = []
+let visibleWidgets: Widget[] = []
 
 const container = byId('app', HTMLElement)
 const overlays = byId('overlays', HTMLElement)
 
-export function showWidget(widget: IWidget) {
+export function showWidget(widget: Widget) {
   visibleWidgets.forEach(v => v.onHide?.())
 
   container.innerHTML = ''
@@ -33,7 +29,7 @@ export function showWidget(widget: IWidget) {
   widget.onShow?.()
 }
 
-export function blurToWidget(widget: IWidget) {
+export function blurToWidget(widget: Widget) {
   visibleWidgets.forEach(w => {
     w.node.classList.add('blurring-out')
   })
@@ -51,7 +47,7 @@ export function blurToWidget(widget: IWidget) {
   }, 300)
 }
 
-export function overlayWidget(widget: IWidget) {
+export function overlayWidget(widget: Widget) {
   visibleWidgets.push(widget)
 
   const overlay = document.createElement('div')
@@ -60,7 +56,7 @@ export function overlayWidget(widget: IWidget) {
   overlays.append(overlay)
 }
 
-export function closeOverlay(overlay: IOverlay) {
+export function closeOverlay(overlay: Overlay) {
   const idx = visibleWidgets.indexOf(overlay)
   if (idx >= 0) {
     const oldWidgets = visibleWidgets

@@ -1,7 +1,7 @@
 import { div, HtmlContent } from './dom-helper'
-import { IWidget } from './widgets'
+import { Widget } from './widgets'
 
-export class TextWidget implements IWidget {
+export class TextWidget implements Widget {
   public readonly name = 'text widget'
   public readonly node: HTMLElement
 

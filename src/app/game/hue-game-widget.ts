@@ -1,6 +1,6 @@
 import { Color } from '../color/color'
 import { div } from '../dom/dom-helper'
-import { IWidget } from '../dom/widgets'
+import { Widget } from '../dom/widgets'
 import { EventEmitter } from '../util/event-emitter'
 import { GameConfig } from './levels'
 import { gameHeader } from './game-util'
@@ -11,7 +11,7 @@ export interface HueGameConfig extends GameConfig {
   given: number[],
 }
 
-export class HueGameWidget implements IWidget {
+export class HueGameWidget implements Widget {
   readonly name = 'game widget'
   readonly node: HTMLElement
 

@@ -1,5 +1,5 @@
 import { div } from '../dom/dom-helper'
-import { IWidget } from '../dom/widgets'
+import { Widget } from '../dom/widgets'
 import { EventEmitter } from '../util/event-emitter'
 import { gameHeader } from './game-util'
 import { GameConfig } from './levels'
@@ -9,7 +9,7 @@ export interface MemoryGameConfig extends GameConfig {
   colors: string[]
 }
 
-export class MemoryGameWidget implements IWidget {
+export class MemoryGameWidget implements Widget {
   readonly name = 'game widget'
   readonly node: HTMLElement
 
