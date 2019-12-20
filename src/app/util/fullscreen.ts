@@ -39,12 +39,12 @@ export function onFullscreenExited(f: () => void) {
   exitListeners.push(f)
 }
 
-export function fullscreenButton(normalText: string, fsText: string, style: string): HTMLButtonElement | null {
+export function fullscreenButton(normalText: string, fsText: string, clazz: string): HTMLButtonElement | null {
   if (!supportsFullscreen(document.documentElement)) return null
 
   let fs = document.fullscreenElement != null
 
-  const btn = button(fs ? fsText : normalText, { style }, () => {
+  const btn = button(fs ? fsText : normalText, { class: clazz }, () => {
     fs = !fs
     if (fs) enterFullscreen(document.documentElement)
     else exitFullscreen()

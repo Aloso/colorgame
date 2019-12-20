@@ -1,7 +1,7 @@
 import { HslColor } from '../color/hslColor'
-import { GameConfig } from './hue-game-widget'
+import { HueGameConfig } from './hue-game-widget'
 
-export const levels: GameConfig[] = [
+export const levels: HueGameConfig[] = [
   {
     width: 5,
     height: 7,
@@ -28,4 +28,12 @@ export const levels: GameConfig[] = [
   },
 ]
 
+levels.forEach((_, lvl) => {
+  const v = localStorage[`lvl${lvl}`]
+  if (v != null) levels[lvl].highScore = +v
+})
 
+export function setHighScore(lvl: number, moves: number) {
+  levels[lvl].highScore = moves
+  localStorage[`lvl${lvl}`] = moves
+}

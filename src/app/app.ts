@@ -2,13 +2,15 @@ import { bigButton, button, div, el, frag, h1, p, span } from './dom/dom-helper'
 import { TextWidget } from './dom/text-widget'
 import { blurToWidget, overlayWidget, showWidget } from './dom/widgets'
 import { HueGameWidget } from './game/hue-game-widget'
-import { levels } from './game/levels'
+import { levels, setHighScore } from './game/levels'
 import { showSuggestion } from './game/suggestions'
 import { randomVictoryMessage, shortVictoryMessage } from './game/victory'
 import { fullscreenButton } from './util/fullscreen'
 
-const fsButton = fullscreenButton('Vollbild', 'Vollbild beenden',
-  'font-size: 83%; margin-top: 10vw')
+const fsButton = fullscreenButton('Vollbild', 'Vollbild beenden', 'start-fs-button')
+
+const levelFsButton = fullscreenButton('⛶', '⛶', 'heading-fs-button')
+
 
 export function startScreen() {
   showWidget(new TextWidget(frag(
@@ -50,13 +52,14 @@ export function introduction() {
 function levelOverview() {
   const levelsEl = levels.map((l, i) => button([
     div(`${l.level}`, { class: 'lvl-id' }),
-    div(l.highScore != null ? `Rekord: ${l.highScore}` : '', { class: 'high-score' }),
-  ], { class: 'lvl' }, () => {
-    startLevel(i)
-  }))
+    div(l.highScore != null ? `${l.highScore} Züge` : '', { class: 'high-score' }),
+  ], { class: 'lvl' }, () => startLevel(i)))
 
   blurToWidget(new TextWidget(frag(
-    el('h2', 'Alle Level'),
+    el('h2', frag(
+      span('Alle Level', { style: 'flex-grow: 1' }),
+      levelFsButton,
+    ), { style: 'display: flex; width: 100%' }),
     div(levelsEl, { class: 'lvls' }),
   )))
 }
@@ -74,14 +77,14 @@ function startLevel(lvl: number) {
 }
 
 function showVictoryForLevel(lvl: number, moves: number) {
-  const key = `lvl${lvl}`
-  const previousRecord = +(localStorage[key] || 0) || null
+  const previousRecord = levels[lvl].highScore
+  setHighScore(lvl, moves)
+
   const isNewRecord = previousRecord != null && moves < previousRecord
 
   const showLvl0Msg = lvl === 0 && localStorage.showLvl0Msg == null
   localStorage.showLvl0Msg = 'shown'
 
-  localStorage[key] = moves
   if (completedLevels === lvl) {
     localStorage.completedLevels = completedLevels = lvl + 1
   }
@@ -101,12 +104,7 @@ function showVictoryForLevel(lvl: number, moves: number) {
       if (localStorage.gameCompleteShown != null) {
         levelOverview()
       } else {
-        localStorage.gameCompleteShown = '1'
-        blurToWidget(new TextWidget([
-          h1('Spiel abge&shy;schlos&shy;sen'),
-          p('Du hast alle Level beendet. Du kannst jetzt einzelne Level wiederholen, wenn du willst'),
-          bigButton('Übersicht', () => levelOverview()),
-        ]))
+        endScreen()
       }
     } else {
       localStorage.removeItem('gameCompleteShown')
@@ -125,4 +123,14 @@ function showVictoryForLevel(lvl: number, moves: number) {
     button('Wiederholen', { style: 'font-size: 83%; margin-top: 6vw' },
       () => showSuggestion(repeatLevel)),
   )))
+}
+
+function endScreen() {
+  localStorage.gameCompleteShown = '1'
+
+  blurToWidget(new TextWidget([
+    h1('Spiel abge&shy;schlos&shy;sen'),
+    p('Du hast alle Level beendet. Du kannst jetzt einzelne Level wiederholen, wenn du willst'),
+    bigButton('Übersicht', () => levelOverview()),
+  ]))
 }

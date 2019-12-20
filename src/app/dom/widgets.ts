@@ -47,7 +47,7 @@ export function blurToWidget(widget: IWidget) {
     widget.onShow?.()
     setTimeout(() => {
       widget.node.style.opacity = ''
-    }, 10)
+    }, 15)
   }, 300)
 }
 

@@ -1,9 +1,10 @@
 import { Color } from '../color/color'
-import { div } from '../dom/dom-helper'
+import { div, frag, span } from '../dom/dom-helper'
 import { IWidget } from '../dom/widgets'
 import { EventEmitter } from '../util/event-emitter'
+import { fullscreenButton } from '../util/fullscreen'
 
-export interface GameConfig {
+export interface HueGameConfig {
   width: number,
   height: number,
   level: number,
@@ -12,18 +13,20 @@ export interface GameConfig {
   highScore?: number,
 }
 
+const fsButton = fullscreenButton('⛶', '⛶', 'heading-fs-button white-bg')
+
 export class HueGameWidget implements IWidget {
   readonly name = 'game widget'
   readonly node: HTMLElement
 
   readonly victory = new EventEmitter<number>()
 
-  constructor(config: GameConfig) {
+  constructor(config: HueGameConfig) {
     let clicked: HTMLDivElement | null = null
     let gameRunning = false
 
     let moves = 0
-    const movesElem = div('', { class: 'float-right' })
+    const movesElem = div('', { class: 'moves' })
 
     let movable: HTMLDivElement[]
     const fields = makeFields(config, (el) => {
@@ -51,7 +54,11 @@ export class HueGameWidget implements IWidget {
       }
     })
 
-    const header = div([`Level ${config.level}`, movesElem], { class: 'game-header' })
+    const header = div(frag(
+      span(`Level ${config.level}`, { class: 'lvl' }),
+      movesElem,
+      fsButton,
+    ), { class: 'game-header' })
 
     this.node = div([header, div(fields)], { class: 'widget game-widget' })
 
@@ -111,7 +118,7 @@ function isSorted(array: HTMLDivElement[]): boolean {
 }
 
 
-function makeFields(config: GameConfig, onClick: (elem: HTMLDivElement) => void): HTMLDivElement[] {
+function makeFields(config: HueGameConfig, onClick: (elem: HTMLDivElement) => void): HTMLDivElement[] {
   const c1 = config.corners[0].rgb
   const c2 = config.corners[1].rgb
   const c3 = config.corners[2].rgb
