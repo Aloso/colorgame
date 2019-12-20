@@ -2,6 +2,7 @@
   "extends": ["tslint:recommended"],
   "rules": {
     "arrow-return-shorthand": true,
+    "array-type": false,
     "no-bitwise": false,
     "curly": false,
     "arrow-parens": false,

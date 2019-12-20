@@ -1,19 +1,15 @@
 import { Color } from '../color/color'
-import { div, frag, span } from '../dom/dom-helper'
+import { div } from '../dom/dom-helper'
 import { IWidget } from '../dom/widgets'
 import { EventEmitter } from '../util/event-emitter'
-import { fullscreenButton } from '../util/fullscreen'
+import { GameConfig } from './levels'
+import { gameHeader } from './game-util'
 
-export interface HueGameConfig {
-  width: number,
-  height: number,
-  level: number,
+export interface HueGameConfig extends GameConfig {
+  type: 'hue-game',
   corners: [Color<any>, Color<any>, Color<any>, Color<any>],
   given: number[],
-  highScore?: number,
 }
-
-const fsButton = fullscreenButton('⛶', '⛶', 'heading-fs-button white-bg')
 
 export class HueGameWidget implements IWidget {
   readonly name = 'game widget'
@@ -21,7 +17,7 @@ export class HueGameWidget implements IWidget {
 
   readonly victory = new EventEmitter<number>()
 
-  constructor(config: HueGameConfig) {
+  constructor(num: number, config: HueGameConfig) {
     let clicked: HTMLDivElement | null = null
     let gameRunning = false
 
@@ -54,13 +50,10 @@ export class HueGameWidget implements IWidget {
       }
     })
 
-    const header = div(frag(
-      span(`Level ${config.level}`, { class: 'lvl' }),
-      movesElem,
-      fsButton,
-    ), { class: 'game-header' })
-
-    this.node = div([header, div(fields)], { class: 'widget game-widget' })
+    this.node = div([
+      gameHeader(num, config, movesElem),
+      div(fields),
+    ], { class: 'widget game-widget' })
 
     setTimeout(() => {
       movable = shuffle(fields)
@@ -135,7 +128,7 @@ function makeFields(config: HueGameConfig, onClick: (elem: HTMLDivElement) => vo
   for (let x = 0; x < config.width; ++x) {
     for (let y = 0; y < config.height; ++y) {
       const color = row1[x].middleBetween(row2[x], y / (config.height - 1))
-      const elem = div([], {
+      const elem = div(null, {
         class: 'game-field',
         style: `background: ${color.hex}; width: ${w * 100}vw; height: ${h * 100}vh; left: ${x * w * 100}vw; top: ${y * h * 100 + 10}vh`,
       })

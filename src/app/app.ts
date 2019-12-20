@@ -6,6 +6,7 @@ import { levels, setHighScore } from './game/levels'
 import { showSuggestion } from './game/suggestions'
 import { randomVictoryMessage, shortVictoryMessage } from './game/victory'
 import { fullscreenButton } from './util/fullscreen'
+import { MemoryGameWidget } from './game/memory-game-widget'
 
 const fsButton = fullscreenButton('Vollbild', 'Vollbild beenden', 'start-fs-button')
 
@@ -51,7 +52,7 @@ export function introduction() {
 
 function levelOverview() {
   const levelsEl = levels.map((l, i) => button([
-    div(`${l.level}`, { class: 'lvl-id' }),
+    div(`${i + 1}`, { class: 'lvl-id' }),
     div(l.highScore != null ? `${l.highScore} Züge` : '', { class: 'high-score' }),
   ], { class: 'lvl' }, () => startLevel(i)))
 
@@ -69,8 +70,12 @@ function isGameComplete(): boolean {
 }
 
 function startLevel(lvl: number) {
-  const game = new HueGameWidget(levels[lvl])
-  if (game == null) throw new Error('Game is null')
+  const level = levels[lvl]
+  if (level == null) throw new Error('Game is null')
+
+  const game = level.type === 'hue-game'
+    ? new HueGameWidget(lvl, level)
+    : new MemoryGameWidget(lvl, level)
 
   blurToWidget(game)
   game.victory.on((moves: number) => showVictoryForLevel(lvl, moves))
@@ -78,9 +83,7 @@ function startLevel(lvl: number) {
 
 function showVictoryForLevel(lvl: number, moves: number) {
   const previousRecord = levels[lvl].highScore
-  setHighScore(lvl, moves)
-
-  const isNewRecord = previousRecord != null && moves < previousRecord
+  const isNewRecord = setHighScore(lvl, moves)
 
   const showLvl0Msg = lvl === 0 && localStorage.showLvl0Msg == null
   localStorage.showLvl0Msg = 'shown'
