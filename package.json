@@ -3,7 +3,9 @@
   "description": "A colorful game with christmas spirit",
   "repository": "https://github.com/Aloso/colorgame.git",
   "keywords": [
-    "color", "game", "christmas"
+    "color",
+    "game",
+    "christmas"
   ],
   "author": "Ludwig Stecher <ludwig.stecher@gmx.de>",
   "version": "1.0.0",
@@ -16,30 +18,30 @@
     "serve": "./node_modules/webpack-dev-server/bin/webpack-dev-server.js --mode production"
   },
   "dependencies": {
-    "core-js": "^3.4.3",
+    "core-js": "^3.6.0",
     "normalize.css": "^8.0.1",
     "regenerator-runtime": "^0.13.3"
   },
   "devDependencies": {
     "@types/webpack-env": "^1.14.1",
-    "autoprefixer": "^9.7.2",
+    "autoprefixer": "^9.7.3",
     "clean-webpack-plugin": "^3.0.0",
-    "copy-webpack-plugin": "^5.0.5",
+    "copy-webpack-plugin": "^5.1.1",
     "css-hot-loader": "^1.4.4",
-    "css-loader": "^3.2.0",
+    "css-loader": "^3.4.0",
     "cssnano": "^4.1.10",
-    "mini-css-extract-plugin": "^0.8.0",
+    "mini-css-extract-plugin": "^0.8.2",
     "node-sass": "^4.13.0",
     "postcss-loader": "^3.0.0",
     "sass-loader": "^8.0.0",
     "source-map-loader": "^0.2.4",
-    "style-loader": "^1.0.0",
+    "style-loader": "^1.0.2",
     "ts-loader": "^6.2.1",
     "tslint": "^5.20.1",
-    "typescript": "^3.7.2",
-    "webpack": "^4.41.2",
+    "typescript": "^3.7.3",
+    "webpack": "^4.41.4",
     "webpack-cli": "^3.3.10",
-    "webpack-dev-server": "^3.9.0",
+    "webpack-dev-server": "^3.10.1",
     "webpack-merge": "^4.2.2"
   }
 }
