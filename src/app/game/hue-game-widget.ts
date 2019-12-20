@@ -1,7 +1,6 @@
 import { Color } from '../color/color'
 import { div } from '../dom/dom-helper'
-import { TextWidget } from '../dom/text-widget'
-import { IWidget, overlayWidget } from '../dom/widgets'
+import { IWidget } from '../dom/widgets'
 import { EventEmitter } from '../util/event-emitter'
 
 export interface GameConfig {
@@ -10,13 +9,14 @@ export interface GameConfig {
   level: number,
   corners: [Color<any>, Color<any>, Color<any>, Color<any>],
   given: number[],
+  highScore?: number,
 }
 
-export class GameWidget implements IWidget {
+export class HueGameWidget implements IWidget {
   readonly name = 'game widget'
   readonly node: HTMLElement
 
-  readonly victory = new EventEmitter<void>()
+  readonly victory = new EventEmitter<number>()
 
   constructor(config: GameConfig) {
     let clicked: HTMLDivElement | null = null
@@ -31,7 +31,7 @@ export class GameWidget implements IWidget {
 
       if (clicked != null && clicked !== el) {
         clicked.classList.remove('active')
-        toggle(clicked, el)
+        toggle(clicked, el).then()
         moves += 1
         movesElem.innerHTML = moves === 1 ? '1 Zug' : `${moves} Züge`
 
@@ -40,11 +40,7 @@ export class GameWidget implements IWidget {
           gameRunning = false
           fields.forEach(f => f.classList.remove('given'))
 
-          setTimeout(() => {
-            const widget = new TextWidget('<p style="font-size:125%">Sieg!</p>Tippe, um fortzufahren...')
-            widget.node.addEventListener('click', () => this.victory.emit())
-            overlayWidget(widget)
-          }, 1200)
+          setTimeout(() => this.victory.emit(moves), 1200)
         }
       } else if (clicked != null) {
         clicked.classList.remove('active')
@@ -100,7 +96,7 @@ function shuffle(array: HTMLDivElement[]): HTMLDivElement[] {
 
   for (let i = fields.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1))
-    toggle(fields[i], fields[j])
+    toggle(fields[i], fields[j]).then()
   }
   return fields
 }

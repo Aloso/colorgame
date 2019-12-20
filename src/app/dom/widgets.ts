@@ -26,6 +26,7 @@ export function showWidget(widget: IWidget) {
   visibleWidgets.forEach(v => v.onHide?.())
 
   container.innerHTML = ''
+  overlays.innerHTML = ''
   container.append(widget.node)
 
   visibleWidgets = [widget]
@@ -38,6 +39,7 @@ export function blurToWidget(widget: IWidget) {
   })
   setTimeout(() => {
     visibleWidgets.forEach(w => w.onHide?.())
+    overlays.innerHTML = ''
 
     container.innerHTML = ''
     widget.node.style.opacity = '0'

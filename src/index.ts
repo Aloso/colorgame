@@ -5,7 +5,7 @@ import 'regenerator-runtime/runtime'
 
 import './index.sass'
 
-import { start } from './app/app'
+import { startScreen } from './app/app'
 import { byId } from './app/dom/dom-helper'
 
 if (module.hot) {
@@ -15,4 +15,4 @@ if (module.hot) {
   })
 }
 
-start()
+startScreen()

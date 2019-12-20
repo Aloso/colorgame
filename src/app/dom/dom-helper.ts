@@ -13,7 +13,12 @@ export function byId<T extends HTMLElement>(id: string, clazz: (new() => T)): T 
   return el
 }
 
-export type HtmlContent = string | HTMLElement | DocumentFragment | Array<string | HTMLElement>
+export type HtmlContent =
+  | string
+  | HTMLElement
+  | DocumentFragment
+  | null
+  | Array<string | HTMLElement | DocumentFragment>
 
 export interface IHtmlAttrs {
   [key: string]: string | number
@@ -25,7 +30,7 @@ export function el(type: string, content: HtmlContent, attrs?: IHtmlAttrs): HTML
     elem.innerHTML = content
   } else if (content instanceof Array) {
     elem.append(...content)
-  } else {
+  } else if (content != null) {
     elem.append(content)
   }
 
@@ -37,14 +42,39 @@ export function el(type: string, content: HtmlContent, attrs?: IHtmlAttrs): HTML
   return elem
 }
 
+export function frag(...contents: HtmlContent[]): DocumentFragment {
+  const elem = document.createDocumentFragment()
+
+  for (const content of contents) {
+    if (typeof content === 'string') {
+      elem.append(document.createTextNode(content))
+    } else if (content instanceof Array) {
+      elem.append(...content)
+    } else if (content != null) {
+      elem.append(content)
+    }
+  }
+  return elem
+}
+
 export function button(content: HtmlContent, attrs: IHtmlAttrs, action: (e: MouseEvent) => void): HTMLButtonElement {
   const elem = el('button', content, attrs) as HTMLButtonElement
   elem.addEventListener('click', action)
   return elem
 }
 
+export function bigButton(content: HtmlContent, action: (e: MouseEvent) => void): HTMLButtonElement {
+  const elem = el('button', content, { class: 'big' }) as HTMLButtonElement
+  elem.addEventListener('click', action)
+  return elem
+}
+
 export function div(content: HtmlContent, attrs?: IHtmlAttrs): HTMLDivElement {
   return el('div', content, attrs) as HTMLDivElement
+}
+
+export function span(content: HtmlContent, attrs?: IHtmlAttrs): HTMLSpanElement {
+  return el('span', content, attrs) as HTMLSpanElement
 }
 
 export function h1(content: HtmlContent, attrs?: IHtmlAttrs): HTMLHeadingElement {
