@@ -7,6 +7,7 @@ import { showSuggestion } from './game/suggestions'
 import { randomVictoryMessage, shortVictoryMessage } from './game/victory'
 import { fullscreenButton } from './util/fullscreen'
 import { MemoryGameWidget } from './game/memory-game-widget'
+import { FloodGameWidget } from './game/flood-game-widget'
 
 const fsButton = fullscreenButton('Vollbild', 'Vollbild beenden', 'start-fs-button')
 
@@ -69,7 +70,9 @@ function startLevel(lvl: number) {
 
   const game = level.type === 'hue-game'
     ? new HueGameWidget(lvl, level)
-    : new MemoryGameWidget(lvl, level)
+    : level.type === 'memory-game'
+      ? new MemoryGameWidget(lvl, level)
+      : new FloodGameWidget(lvl, level)
 
   blurToWidget(game)
   game.victory.on((moves: number) => showVictoryForLevel(lvl, moves))

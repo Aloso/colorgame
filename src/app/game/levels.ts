@@ -4,9 +4,10 @@ import { MemoryGameConfig } from './memory-game-widget'
 import { blurToWidget } from '../dom/widgets'
 import { TextWidget } from '../dom/text-widget'
 import { bigButton, h1, p } from '../dom/dom-helper'
+import { FloodGameConfig } from './flood-game-widget'
 
 export interface GameConfig {
-  type: 'hue-game' | 'memory-game',
+  type: 'hue-game' | 'memory-game' | 'flood-game',
   id: string,
 
   width: number,
@@ -16,7 +17,7 @@ export interface GameConfig {
   highScore?: number,
 }
 
-export const levels: (HueGameConfig | MemoryGameConfig)[] = [
+export const levels: (HueGameConfig | MemoryGameConfig | FloodGameConfig)[] = [
   {
     type: 'hue-game',
     id: 'hue-1',
