@@ -39,8 +39,14 @@ export function onFullscreenExited(f: () => void) {
   exitListeners.push(f)
 }
 
+export function usesWholeScreen() {
+  return document.fullscreenElement == null
+    && window.innerWidth === window.screen.width
+    && window.innerHeight === window.screen.height
+}
+
 export function fullscreenButton(normalText: string, fsText: string, clazz: string): HTMLButtonElement | null {
-  if (!supportsFullscreen(document.documentElement)) return null
+  if (!supportsFullscreen(document.documentElement) || usesWholeScreen()) return null
 
   let fs = document.fullscreenElement != null
 

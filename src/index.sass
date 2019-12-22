@@ -47,20 +47,21 @@ body
     position: absolute
     transition: .3s
 
+    &.hue
+      &.active
+        transform: scale(1.2)
+        z-index: 2
+
     &.memory
       box-shadow: rgba(0, 0, 0, 0.07) 0 0 0 0.35vw inset
       background-color: white
-      transition: .4s
+      transition: .7s
 
       &.removed
         transform: perspective(400px) rotateY(90deg)
 
       &.active
         transform: perspective(400px) rotateY(180deg)
-
-    &.active
-      transform: scale(1.2)
-      z-index: 2
 
   .memory-bg
     top: 10vh

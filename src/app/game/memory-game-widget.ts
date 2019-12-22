@@ -58,7 +58,7 @@ export class MemoryGameWidget implements Widget {
             rotate(first)
             rotate(el)
             waiting = false
-          }, 1900)
+          }, 1700)
         }
       }
     })
@@ -68,9 +68,7 @@ export class MemoryGameWidget implements Widget {
       div(fields, { class: 'memory-bg' }),
     ], { class: 'widget game-widget' })
 
-    setTimeout(() => {
-      gameRunning = true
-    }, 2000)
+    gameRunning = true
   }
 }
 
@@ -91,10 +89,6 @@ function remove(field: HTMLDivElement) {
   field.style.backgroundColor = ''
 
   setTimeout(() => field.remove(), 400)
-}
-
-function isFinished(array: HTMLDivElement[]): boolean {
-  return array.length === 0
 }
 
 

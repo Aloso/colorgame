@@ -25,27 +25,13 @@ export function startScreen() {
   }
 }
 
-let introShown: boolean = localStorage.introShown === 'true'
 let completedLevels = localStorage.completedLevels == null ? 0 : +localStorage.completedLevels
 
 export function introduction() {
   if (isGameComplete()) {
     levelOverview()
-  } else if (introShown) {
-    startLevel(completedLevels)
   } else {
-    blurToWidget(new TextWidget([
-      h1('Willkommen!'),
-      p('Dieses kleine Spiel ist mein dies&shy;jähriges Weihnachts&shy;geschenk. Ich hoffe, es macht dir Spaß!'),
-      bigButton('Weiter', () => blurToWidget(new TextWidget([
-        p('Als ich eben etwas malen wollte, habe ich aus Versehen meine Farbkiste fallen gelassen, und alle Farben sind über den Boden verteilt.'),
-        p('Kannst du die Farben wieder in die richtige Reihenfolge bringen?'),
-        bigButton('Klar!', () => {
-          localStorage.introShown = introShown = true
-          startLevel(completedLevels)
-        }),
-      ]))),
-    ]))
+    startLevel(completedLevels)
   }
 }
 
@@ -72,6 +58,14 @@ function isGameComplete(): boolean {
 function startLevel(lvl: number) {
   const level = levels[lvl]
   if (level == null) throw new Error('Game is null')
+
+  if (level.onceBefore && localStorage[`${level.id}_before`] == null) {
+    level.onceBefore().then(() => {
+      localStorage[`${level.id}_before`] = 'true'
+      startLevel(lvl)
+    })
+    return
+  }
 
   const game = level.type === 'hue-game'
     ? new HueGameWidget(lvl, level)
