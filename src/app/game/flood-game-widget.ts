@@ -1,7 +1,7 @@
 import { GameConfig } from './levels'
 import { EventEmitter } from '../util/event-emitter'
 import { Widget } from '../dom/widgets'
-import { div } from '../dom/dom-helper'
+import { button, div } from '../dom/dom-helper'
 import { gameHeader } from './game-util'
 
 export interface FloodGameConfig extends GameConfig {
@@ -16,17 +16,80 @@ export class FloodGameWidget implements Widget {
   readonly victory = new EventEmitter<number>()
 
   constructor(num: number, config: FloodGameConfig) {
-    const moves = 0
+    let moves = 0
     const movesElem = div('', { class: 'moves' })
 
     const fields = makeFields(config)
 
+    let contentDiv: HTMLElement
+    let buttonDiv: HTMLElement
+
+    let color = fields[0].getAttribute('data-color')!
+    let gameRunning = true
+
+    const buttons = config.colors.map(c => {
+      return button(null, { class: 'flood-btn', style: `background: ${c}` }, () => {
+        if (!gameRunning) return
+        if (c !== color) {
+          moves++
+          movesElem.innerHTML = moves === 1 ? '1 Zug' : `${moves} Züge`
+
+          floodColor(fields, config.width, config.height, color, c)
+
+          color = c
+          if (fields.every(f => f.getAttribute('data-color') === c)) {
+            gameRunning = false
+            fields[0].classList.remove('given')
+            buttonDiv.remove()
+            contentDiv.style.background = c
+            setTimeout(() => this.victory.emit(moves), 500)
+          }
+        }
+      })
+    })
+
+    contentDiv = div(fields, { class: 'flood-bg' })
+    buttonDiv = div(buttons, { class: 'flood-controls' })
+
     this.node = div([
       gameHeader(num, config, movesElem),
-      div(fields, { class: 'flood-bg' }),
+      contentDiv,
+      buttonDiv,
     ], { class: 'widget game-widget' })
   }
 }
+
+
+function floodColor(fields: HTMLDivElement[], width: number, height: number, prev: string, newColor: string) {
+  const getItem = getItem2(fields, width, height)
+
+  const neighbors: [number, number][] = [[0, 0]]
+  while (neighbors.length > 0) {
+    const next = neighbors.pop()!
+    const el = getItem(next)
+    if (el != null) {
+      el.style.background = newColor
+      el.setAttribute('data-color', newColor)
+    }
+
+    const newNeighbors: [number, number][] = [
+      [next[0], next[1] + 1],
+      [next[0], next[1] - 1],
+      [next[0] + 1, next[1]],
+      [next[0] - 1, next[1]],
+    ]
+    neighbors.push(...newNeighbors.filter((xy) => {
+      return getItem(xy)?.getAttribute('data-color') === prev
+    }))
+  }
+}
+
+function getItem2<T>(fields: T[], width: number, height: number): (xy: [number, number]) => T | null {
+  return (xy: [number, number]) => (xy[0] >= 0 && xy[1] >= 0 && xy[0] < width && xy[1] < height)
+    ? fields[xy[1] * width + xy[0]] || null
+    : null
+}
+
 
 
 function makeFields(config: FloodGameConfig): HTMLDivElement[] {
@@ -45,8 +108,8 @@ function makeFields(config: FloodGameConfig): HTMLDivElement[] {
 
   const makeField = makeField2(config.width, config.height)
 
-  for (let x = 0; x < config.width; x++) {
-    for (let y = 0; y < config.height; y++) {
+  for (let y = 0; y < config.height; y++) {
+    for (let x = 0; x < config.width; x++) {
       const ix = (Math.random() * colorFreq.length) | 0
       const color = colors[ix]
       colorFreq[ix]--
@@ -65,13 +128,13 @@ function makeFields(config: FloodGameConfig): HTMLDivElement[] {
 }
 
 function makeField2(width: number, height: number) {
-  const w = Math.ceil(1 / width * 100_000_000) / 100_000_000
-  const h = Math.ceil(0.7 / height * 100_000_000) / 100_000_000
+  const w = 1 / width
+  const h = 0.7 / height
 
   return (x: number, y: number, color: string) => {
     const elem = div(null, {
       class: 'game-field flood',
-      style: `width: ${w * 100}vw; height: ${h * 100}vh; background-color: ${color};
+      style: `width: ${w * 100 + 1e-5}vw; height: ${h * 100 + 1e-5}vh; background-color: ${color};
               left: ${x * w * 100}vw; top: ${y * h * 100 + 10}vh`,
     })
     elem.setAttribute('data-color', color)

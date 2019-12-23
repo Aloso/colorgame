@@ -97,8 +97,8 @@ function makeFields(config: MemoryGameConfig, onClick: (elem: HTMLDivElement) =>
     throw new Error('Odd number of fields')
   }
 
-  const w = Math.ceil(1 / config.width * 100_000_000) / 100_000_000
-  const h = Math.ceil(0.9 / config.height * 100_000_000) / 100_000_000
+  const w = 1 / config.width * 10_000
+  const h = 0.9 / config.height * 10_000
 
   const elems: HTMLDivElement[] = []
   config.colors.forEach(c => elems.push(
@@ -122,7 +122,7 @@ function makeFields(config: MemoryGameConfig, onClick: (elem: HTMLDivElement) =>
 function makeField(w: number, h: number, color: string, onClick: (elem: HTMLDivElement) => void) {
   const elem = div(null, {
     class: 'game-field memory',
-    style: `width: ${w * 100}vw; height: ${h * 100}vh`,
+    style: `width: ${w * 100 + 1e-5}vw; height: ${h * 100 + 1e-5}vh`,
   })
   elem.setAttribute('data-color', color)
   elem.addEventListener('click', () => onClick(elem))

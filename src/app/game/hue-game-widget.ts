@@ -118,8 +118,8 @@ function makeFields(config: HueGameConfig, onClick: (elem: HTMLDivElement) => vo
   const c4 = config.corners[3].rgb
 
   const steps = config.width - 1
-  const w = Math.ceil(1 / config.width * 100_000_000) / 100_000_000
-  const h = Math.ceil(0.9 / config.height * 100_000_000) / 100_000_000
+  const w = 1 / config.width
+  const h = 0.9 / config.height
 
   const row1 = new Array(config.width).fill(0).map((_, i) => c1.middleBetween(c2, i / steps))
   const row2 = new Array(config.width).fill(0).map((_, i) => c3.middleBetween(c4, i / steps))
@@ -130,7 +130,7 @@ function makeFields(config: HueGameConfig, onClick: (elem: HTMLDivElement) => vo
       const color = row1[x].middleBetween(row2[x], y / (config.height - 1))
       const elem = div(null, {
         class: 'game-field hue',
-        style: `background: ${color.hex}; width: ${w * 100}vw; height: ${h * 100}vh;
+        style: `background: ${color.hex}; width: ${w * 100 + 1e-5}vw; height: ${h * 100 + 1e-5}vh;
                 left: ${x * w * 100}vw; top: ${y * h * 100 + 10}vh`,
       })
       elem.addEventListener('click', () => {

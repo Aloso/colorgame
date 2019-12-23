@@ -69,8 +69,8 @@ export const levels: (HueGameConfig | MemoryGameConfig | FloodGameConfig)[] = [
     width: 10,
     height: 12,
     colors: [
-      '#f02913', '#89e4ff', '#ffff00',
-      '#33cb00', '#2544cf', '#e55aff',
+      '#f02913', '#33cb00', '#2544cf',
+      '#e55aff', '#ffff00', '#89e4ff',
     ],
 
     onceBefore: () => new Promise(resolve => blurToWidget(new TextWidget([
@@ -108,6 +108,17 @@ export const levels: (HueGameConfig | MemoryGameConfig | FloodGameConfig)[] = [
     ],
   },
   {
+    type: 'flood-game',
+    id: 'flood-2',
+
+    width: 11,
+    height: 14,
+    colors: [
+      '#f02913', '#33cb00', '#2544cf',
+      '#e55aff', '#ffff00', '#89e4ff',
+    ],
+  },
+  {
     type: 'hue-game',
     id: 'hue-3',
 
@@ -131,6 +142,17 @@ export const levels: (HueGameConfig | MemoryGameConfig | FloodGameConfig)[] = [
       '#d90000', '#d95a00', '#d99400', '#d9d200',
       '#82d900', '#00d92b', '#00d2d9', '#007bd9',
       '#004cd9', '#4800d9', '#7400d9', '#d900bf',
+    ],
+  },
+  {
+    type: 'flood-game',
+    id: 'flood-3',
+
+    width: 12,
+    height: 15,
+    colors: [
+      '#f02913', '#33cb00', '#2544cf',
+      '#e55aff', '#ffff00', '#89e4ff',
     ],
   },
   {
@@ -161,6 +183,17 @@ export const levels: (HueGameConfig | MemoryGameConfig | FloodGameConfig)[] = [
     ],
   },
   {
+    type: 'flood-game',
+    id: 'flood-4',
+
+    width: 13,
+    height: 17,
+    colors: [
+      '#f02913', '#33cb00', '#2544cf',
+      '#e55aff', '#ffff00', '#89e4ff',
+    ],
+  },
+  {
     type: 'hue-game',
     id: 'hue-5',
 
@@ -188,6 +221,17 @@ export const levels: (HueGameConfig | MemoryGameConfig | FloodGameConfig)[] = [
     ],
   },
   {
+    type: 'flood-game',
+    id: 'flood-5',
+
+    width: 14,
+    height: 18,
+    colors: [
+      '#f02913', '#33cb00', '#2544cf',
+      '#e55aff', '#ffff00', '#89e4ff',
+    ],
+  },
+  {
     type: 'hue-game',
     id: 'hue-6',
 
@@ -212,6 +256,17 @@ export const levels: (HueGameConfig | MemoryGameConfig | FloodGameConfig)[] = [
       '#adff33', '#33ff5c', '#33f8ff', '#33a7ff',
       '#3355ff', '#7733ff', '#b833ff', '#ff38c8',
       '#000000', '#575757', '#d1d1d1', '#ffffff',
+    ],
+  },
+  {
+    type: 'flood-game',
+    id: 'flood-6',
+
+    width: 15,
+    height: 20,
+    colors: [
+      '#f02913', '#33cb00', '#2544cf',
+      '#e55aff', '#ffff00', '#89e4ff',
     ],
   },
 
