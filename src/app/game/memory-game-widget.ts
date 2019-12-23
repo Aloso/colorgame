@@ -97,8 +97,8 @@ function makeFields(config: MemoryGameConfig, onClick: (elem: HTMLDivElement) =>
     throw new Error('Odd number of fields')
   }
 
-  const w = 1 / config.width * 10_000
-  const h = 0.9 / config.height * 10_000
+  const w = 1 / config.width
+  const h = 0.9 / config.height
 
   const elems: HTMLDivElement[] = []
   config.colors.forEach(c => elems.push(

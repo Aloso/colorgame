@@ -1,4 +1,4 @@
-import { bigButton, h1, p } from '../dom/dom-helper'
+import { bigButton, div, h1, p } from '../dom/dom-helper'
 import { TextWidget } from '../dom/text-widget'
 import { blurToWidget } from '../dom/widgets'
 
@@ -10,29 +10,41 @@ export interface Suggestion {
 
 const suggestions: Suggestion[] = [
   {
-    id: 'luminance',
+    id: 'browser',
     title: 'Tipp',
-    text: 'Stelle die Bildschirmhelligkeit hoch genug, um die Farben gut unterscheiden zu können.',
+    text: `<p>Um die App off&shy;line zu nut&shy;zen, kannst du sie
+      <b>zum Start&shy;bild&shy;schirm hinzu&shy;fügen/eine Sei&shy;ten&shy;ver&shy;knüp&shy;fung erstellen</b>.</p>
+      <p>Dies funk&shy;tio&shy;niert am besten in Chrome.</p>`,
   },
   {
-    id: 'surrounding',
+    id: 'luminance',
     title: 'Tipp',
-    text: '',
+    text: 'Stelle die Bild&shy;schirm&shy;hellig&shy;keit hoch genug, um die Farben gut unter&shy;scheiden zu können.',
+  },
+  {
+    id: 'save',
+    title: 'Tipp',
+    text: 'Es wird auto&shy;ma&shy;tisch gespei&shy;chert, welche Level du bereits abge&shy;schlossen hast.',
+  },
+  {
+    id: 'repeat',
+    title: 'Tipp',
+    text: 'Du kannst Level wieder&shy;holen, um deinen Rekord an Zügen zu ver&shy;bessern.',
   },
 ]
 
-const suggestionsShown = suggestions.map(s => localStorage[s.id] === 'shown')
+const suggestionsShown = suggestions.map(s => localStorage[s.id + '_hint'] === 'shown')
 
 export function showSuggestion(then: () => void) {
-  const nextIndex = suggestionsShown.indexOf(true)
+  const nextIndex = suggestionsShown.indexOf(false)
   if (nextIndex >= 0) {
     const s = suggestions[nextIndex]
-    suggestionsShown[nextIndex] = false
-    localStorage[s.id] = 'shown'
+    suggestionsShown[nextIndex] = true
+    localStorage[s.id + '_hint'] = 'shown'
 
     blurToWidget(new TextWidget([
       h1(s.title),
-      p(s.text),
+      div(s.text),
       bigButton('Weiter', then),
     ]))
   } else {
