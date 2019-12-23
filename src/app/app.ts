@@ -15,11 +15,34 @@ const levelFsButton = fullscreenButton('⛶', '⛶', 'heading-fs-button')
 
 
 export function startScreen() {
-  showWidget(new TextWidget(frag(
-    h1('Farbwirbel'),
-    bigButton('Start', () => introduction()),
-    fsButton,
-  )))
+  if (location.hash === '') {
+    showWidget(new TextWidget(frag(
+      h1('Farbwirbel'),
+      bigButton('Start', () => introduction()),
+      fsButton,
+    )))
+  } else {
+    showWidget(new TextWidget(h1('Farbwirbel')))
+
+    setTimeout(() => {
+      const hash = location.hash
+      if (hash === '#levels') {
+        levelOverview()
+      } else if (hash === '#end') {
+        endScreen()
+      } else if (hash.startsWith('#lvl-')) {
+        const id = hash.replace(/^#lvl-/, '')
+        const lvl = levels.findIndex(l => l.id === id)
+        if (lvl >= 0) {
+          startLevel(lvl)
+        } else {
+          introduction()
+        }
+      } else {
+        introduction()
+      }
+    }, 500)
+  }
 
   if (window.innerWidth > window.innerHeight) {
     alert('Bitte öffne diese Website auf einem Handy oder Tablet im Hochformat!')
@@ -42,6 +65,8 @@ function levelOverview() {
     div(`${i + 1}`, { class: 'lvl-id' }),
     div(l.highScore != null ? `${l.highScore} Züge` : '', { class: 'high-score' }),
   ], { class: 'lvl' }, () => startLevel(i)))
+
+  location.hash = `#levels`
 
   blurToWidget(new TextWidget(frag(
     el('h2', frag(
@@ -67,6 +92,8 @@ function startLevel(lvl: number) {
     })
     return
   }
+
+  location.hash = `#lvl-${level.id}`
 
   const game = level.type === 'hue-game'
     ? new HueGameWidget(lvl, level)
@@ -127,6 +154,8 @@ function showVictoryForLevel(lvl: number, moves: number) {
 
 function endScreen() {
   localStorage.gameCompleteShown = '1'
+
+  location.hash = `#end`
 
   blurToWidget(new TextWidget([
     h1('Spiel abge&shy;schlos&shy;sen'),
