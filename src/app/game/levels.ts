@@ -63,6 +63,25 @@ export const levels: (HueGameConfig | MemoryGameConfig | FloodGameConfig)[] = [
     ]))),
   },
   {
+    type: 'flood-game',
+    id: 'flood-1',
+
+    width: 10,
+    height: 12,
+    colors: [
+      '#f02913', '#89e4ff', '#ffff00',
+      '#33cb00', '#2544cf', '#e55aff',
+    ],
+
+    onceBefore: () => new Promise(resolve => blurToWidget(new TextWidget([
+      h1('Farbenflut'),
+      p('Färbe alle Felder in der gleichen Farbe!'),
+      p('Du startest links oben; wenn du unten auf eine Farbe tippst, ' +
+        'werden oben alle angren&shy;zen&shy;den Fel&shy;der mit der glei&shy;chen Farbe so ein&shy;ge&shy;färbt.'),
+      bigButton('Los!', () => resolve()),
+    ]))),
+  },
+  {
     type: 'hue-game',
     id: 'hue-2',
 

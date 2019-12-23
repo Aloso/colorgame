@@ -11,3 +11,11 @@ export function gameHeader(num: number, config: GameConfig, movesElem: HTMLEleme
     fsButton,
   ), { class: 'game-header' })
 }
+
+export function shuffle(fields: HTMLDivElement[]): HTMLDivElement[] {
+  for (let i = fields.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [fields[i], fields[j]] = [fields[j], fields[i]]
+  }
+  return fields
+}

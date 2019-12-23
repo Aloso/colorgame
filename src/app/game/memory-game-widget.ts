@@ -1,7 +1,7 @@
 import { div } from '../dom/dom-helper'
 import { Widget } from '../dom/widgets'
 import { EventEmitter } from '../util/event-emitter'
-import { gameHeader } from './game-util'
+import { gameHeader, shuffle } from './game-util'
 import { GameConfig } from './levels'
 
 export interface MemoryGameConfig extends GameConfig {
@@ -101,10 +101,10 @@ function makeFields(config: MemoryGameConfig, onClick: (elem: HTMLDivElement) =>
   const h = Math.ceil(0.9 / config.height * 100_000_000) / 100_000_000
 
   const elems: HTMLDivElement[] = []
-  config.colors.forEach(c => {
-    elems.push(makeField(w, h, c, onClick))
-    elems.push(makeField(w, h, c, onClick))
-  })
+  config.colors.forEach(c => elems.push(
+    makeField(w, h, c, onClick),
+    makeField(w, h, c, onClick),
+  ))
 
   shuffle(elems)
 
@@ -127,12 +127,4 @@ function makeField(w: number, h: number, color: string, onClick: (elem: HTMLDivE
   elem.setAttribute('data-color', color)
   elem.addEventListener('click', () => onClick(elem))
   return elem
-}
-
-function shuffle(fields: HTMLDivElement[]): HTMLDivElement[] {
-  for (let i = fields.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [fields[i], fields[j]] = [fields[j], fields[i]]
-  }
-  return fields
 }

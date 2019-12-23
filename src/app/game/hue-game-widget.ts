@@ -130,7 +130,8 @@ function makeFields(config: HueGameConfig, onClick: (elem: HTMLDivElement) => vo
       const color = row1[x].middleBetween(row2[x], y / (config.height - 1))
       const elem = div(null, {
         class: 'game-field hue',
-        style: `background: ${color.hex}; width: ${w * 100}vw; height: ${h * 100}vh; left: ${x * w * 100}vw; top: ${y * h * 100 + 10}vh`,
+        style: `background: ${color.hex}; width: ${w * 100}vw; height: ${h * 100}vh;
+                left: ${x * w * 100}vw; top: ${y * h * 100 + 10}vh`,
       })
       elem.addEventListener('click', () => {
         if (!elem.classList.contains('given')) onClick(elem)
