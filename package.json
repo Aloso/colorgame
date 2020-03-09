@@ -23,7 +23,7 @@
     "regenerator-runtime": "^0.13.3"
   },
   "devDependencies": {
-    "@types/webpack-env": "^1.14.1",
+    "@types/webpack-env": "^1.15.1",
     "autoprefixer": "^9.7.4",
     "clean-webpack-plugin": "^3.0.0",
     "copy-webpack-plugin": "^5.1.1",
