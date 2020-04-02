@@ -158,8 +158,8 @@ function endScreen() {
   location.hash = `#end`
 
   blurToWidget(new TextWidget([
-    h1('Spiel abge&shy;schlos&shy;sen'),
-    p('Du hast alle Level beendet. Du kannst jetzt einzelne Level wiederholen, wenn du willst'),
+    h1('🎄 Frohe 🎄<br>Weih&shy;nachten'),
+    p('Du hast alle Level abge&shy;schlossen. Du kannst jetzt ein&shy;zelne Level wieder&shy;holen, wenn du willst.'),
     bigButton('Übersicht', () => levelOverview()),
   ]))
 }
