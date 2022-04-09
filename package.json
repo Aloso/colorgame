@@ -8,40 +8,52 @@
     "christmas"
   ],
   "author": "Ludwig Stecher <ludwig.stecher@gmx.de>",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "license": "MIT",
   "scripts": {
-    "watch": "./node_modules/webpack/bin/webpack.js --mode development --watch",
-    "build": "./node_modules/webpack/bin/webpack.js --mode development",
-    "start": "./node_modules/webpack-dev-server/bin/webpack-dev-server.js --mode development",
-    "prod": "./node_modules/webpack/bin/webpack.js --mode production",
-    "serve": "./node_modules/webpack-dev-server/bin/webpack-dev-server.js --mode production"
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "test": "jest",
+    "typecheck": "tsc --noEmit --incremental",
+    "lint": "eslint ./src --ext .jsx,.js,.ts,.tsx --ignore-path ./.gitignore",
+    "lint:fix": "eslint ./src --ext .jsx,.js,.ts,.tsx --fix --ignore-path ./.gitignore",
+    "preview": "vite preview",
+    "prepare": "husky install"
   },
   "dependencies": {
-    "core-js": "^3.6.5",
-    "normalize.css": "^8.0.1",
-    "regenerator-runtime": "^0.13.7"
+    "@babel/core": "^7.17.7",
+    "@babel/preset-env": "^7.16.11",
+    "@babel/preset-typescript": "^7.16.7",
+    "@types/jest": "^27.4.1",
+    "jest": "^27.5.1",
+    "sass": "^1.50.0",
+    "typescript": "^4.6.3",
+    "vite": "^2.9.1"
   },
   "devDependencies": {
-    "@types/webpack-env": "^1.15.2",
-    "autoprefixer": "^9.7.6",
-    "clean-webpack-plugin": "^3.0.0",
-    "copy-webpack-plugin": "^6.0.3",
-    "css-hot-loader": "^1.4.4",
-    "css-loader": "^3.5.3",
-    "cssnano": "^4.1.10",
-    "mini-css-extract-plugin": "^0.9.0",
-    "node-sass": "^4.14.1",
-    "postcss-loader": "^3.0.0",
-    "sass-loader": "^8.0.2",
-    "source-map-loader": "^1.0.1",
-    "style-loader": "^1.2.1",
-    "ts-loader": "^7.0.5",
-    "tslint": "^6.1.2",
-    "typescript": "^3.9.5",
-    "webpack": "^4.42.1",
-    "webpack-cli": "^3.3.12",
-    "webpack-dev-server": "^3.11.0",
-    "webpack-merge": "^4.2.2"
+    "@typescript-eslint/eslint-plugin": "^5.10.2",
+    "@typescript-eslint/parser": "^5.10.2",
+    "eslint": "^8.12.0",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-plugin-import": "^2.25.4",
+    "eslint-plugin-jsx-a11y": "^6.5.1",
+    "eslint-plugin-prettier": "^4.0.0",
+    "eslint-plugin-react": "^7.29.4",
+    "eslint-plugin-simple-import-sort": "^7.0.0",
+    "husky": "^7.0.4",
+    "lint-staged": "^12.3.7",
+    "prettier": "^2.6.1"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
   }
 }

@@ -4,13 +4,15 @@
 tmp/
 
 *.iml
-.idea/
-.vscode/
+/.idea
+/.vscode
 
-node_modules/
-dist/
-.sass-cache/
-*.css.map
-*.sass.map
-*.scss.map
-*.js.map
+# production
+/build
+/dist
+
+# dependencies
+/node_modules
+/dist
+/.sass-cache
+/tsconfig.tsbuildinfo
