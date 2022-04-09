@@ -5,7 +5,7 @@ import { gameHeader, shuffle } from './game-util'
 import { GameConfig } from './levels'
 
 export interface MemoryGameConfig extends GameConfig {
-  type: 'memory-game',
+  type: 'memory-game'
   colors: string[]
 }
 
@@ -63,10 +63,9 @@ export class MemoryGameWidget implements Widget {
       }
     })
 
-    this.node = div([
-      gameHeader(num, config, movesElem),
-      div(fields, { class: 'memory-bg' }),
-    ], { class: 'widget game-widget' })
+    this.node = div([gameHeader(num, config, movesElem), div(fields, { class: 'memory-bg' })], {
+      class: 'widget game-widget',
+    })
 
     gameRunning = true
   }
@@ -91,8 +90,10 @@ function remove(field: HTMLDivElement) {
   setTimeout(() => field.remove(), 400)
 }
 
-
-function makeFields(config: MemoryGameConfig, onClick: (elem: HTMLDivElement) => void): HTMLDivElement[] {
+function makeFields(
+  config: MemoryGameConfig,
+  onClick: (elem: HTMLDivElement) => void,
+): HTMLDivElement[] {
   if (config.width * config.height !== config.colors.length * 2) {
     throw new Error('Odd number of fields')
   }
@@ -101,18 +102,15 @@ function makeFields(config: MemoryGameConfig, onClick: (elem: HTMLDivElement) =>
   const h = 0.9 / config.height
 
   const elems: HTMLDivElement[] = []
-  config.colors.forEach(c => elems.push(
-    makeField(w, h, c, onClick),
-    makeField(w, h, c, onClick),
-  ))
+  config.colors.forEach((c) => elems.push(makeField(w, h, c, onClick), makeField(w, h, c, onClick)))
 
   shuffle(elems)
 
   for (let x = 0; x < config.width; ++x) {
     for (let y = 0; y < config.height; ++y) {
       const elem = elems[y * config.width + x]
-      elem.style.left = (w * x * 100) + 'vw'
-      elem.style.top = (h * y * 100 + 10) + 'vh'
+      elem.style.left = w * x * 100 + 'vw'
+      elem.style.top = h * y * 100 + 10 + 'vh'
     }
   }
 

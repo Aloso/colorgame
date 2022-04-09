@@ -1,10 +1,9 @@
-
 /**
  * Broadcasts events (functions, possibly with a value).
  *
  * This is similar to a `Stream` in dart or an `Observable` in rxjs.
  */
-export class EventEmitter<T extends {} | void> {
+export class EventEmitter<T> {
   private listeners: Array<(event: T) => void> = []
 
   /**

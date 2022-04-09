@@ -31,7 +31,7 @@ export function randomVictoryMessage() {
 }
 
 export function shortVictoryMessage() {
-  const short = victoryMessages.filter(m => m.replace(/&shy;/g, '').length < 11)
+  const short = victoryMessages.filter((m) => m.replace(/&shy;/g, '').length < 11)
   const n = (Math.random() * short.length) | 0
   return short[n % short.length]
 }

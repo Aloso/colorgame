@@ -1,22 +1,27 @@
 import { button } from '../dom/dom-helper'
 
-export function enterFullscreen(elem: HTMLElement | any) {
+export function enterFullscreen(elem: HTMLElement) {
   if (elem.requestFullscreen) {
     elem.requestFullscreen().then()
-  } else if (elem.mozRequestFullScreen) { /* Firefox */
-    elem.mozRequestFullScreen()
-  } else if (elem.webkitRequestFullscreen) { /* Chrome, Safari and Opera */
-    elem.webkitRequestFullscreen()
-  } else if (elem.msRequestFullscreen) { /* IE/Edge */
-    elem.msRequestFullscreen()
+  } else if ((elem as any).mozRequestFullScreen) {
+    // Firefox
+    ;(elem as any).mozRequestFullScreen()
+  } else if ((elem as any).webkitRequestFullscreen) {
+    // Chrome, Safari and Opera
+    ;(elem as any).webkitRequestFullscreen()
+  } else if ((elem as any).msRequestFullscreen) {
+    // IE/Edge
+    ;(elem as any).msRequestFullscreen()
   }
 }
 
-export function supportsFullscreen(elem: HTMLElement | any): boolean {
-  return (elem.requestFullscreen ||
-    elem.mozRequestFullScreen ||
-    elem.webkitRequestFullscreen ||
-    elem.msRequestFullscreen) != null
+export function supportsFullscreen(elem: HTMLElement): boolean {
+  return (
+    (elem.requestFullscreen ||
+      (elem as any).mozRequestFullScreen ||
+      (elem as any).webkitRequestFullscreen ||
+      (elem as any).msRequestFullscreen) != null
+  )
 }
 
 export function exitFullscreen() {
@@ -28,7 +33,7 @@ const exitListeners: Array<() => void> = []
 
 document.addEventListener('fullscreenchange', () => {
   const listeners = document.fullscreenElement == null ? exitListeners : enterListeners
-  listeners.forEach(l => l())
+  listeners.forEach((l) => l())
 })
 
 export function onFullscreenEntered(f: () => void) {
@@ -40,12 +45,18 @@ export function onFullscreenExited(f: () => void) {
 }
 
 export function usesWholeScreen() {
-  return document.fullscreenElement == null
-    && window.innerWidth === window.screen.width
-    && window.innerHeight === window.screen.height
+  return (
+    document.fullscreenElement == null &&
+    window.innerWidth === window.screen.width &&
+    window.innerHeight === window.screen.height
+  )
 }
 
-export function fullscreenButton(normalText: string, fsText: string, clazz: string): HTMLButtonElement | null {
+export function fullscreenButton(
+  normalText: string,
+  fsText: string,
+  clazz: string,
+): HTMLButtonElement | null {
   if (!supportsFullscreen(document.documentElement) || usesWholeScreen()) return null
 
   let fs = document.fullscreenElement != null
@@ -56,8 +67,8 @@ export function fullscreenButton(normalText: string, fsText: string, clazz: stri
     else exitFullscreen()
   })
 
-  onFullscreenEntered(() => btn.innerHTML = fsText)
-  onFullscreenExited(() => btn.innerHTML = normalText)
+  onFullscreenEntered(() => (btn.innerHTML = fsText))
+  onFullscreenExited(() => (btn.innerHTML = normalText))
 
   return btn
 }

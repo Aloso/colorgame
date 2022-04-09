@@ -13,7 +13,7 @@ const fsButton = fullscreenButton('Vollbild', 'Vollbild beenden', 'start-fs-butt
 
 const levelFsButton = fullscreenButton('⛶', '⛶', 'heading-fs-button')
 
-export function startScreen() {
+export function StartScreen() {
   if (location.hash === '') {
     showWidget(
       new TextWidget(
@@ -128,7 +128,11 @@ function showVictoryForLevel(lvl: number, moves: number) {
     localStorage.completedLevels = completedLevels = lvl + 1
   }
 
-  const title = isNewRecord ? 'Neuer Rekord!' : showLvl0Msg ? shortVictoryMessage() : randomVictoryMessage()
+  const title = isNewRecord
+    ? 'Neuer Rekord!'
+    : showLvl0Msg
+    ? shortVictoryMessage()
+    : randomVictoryMessage()
 
   const text = isNewRecord
     ? [p(`${moves} Züge`), p(`Bisheriger Rekord: ${previousRecord} Züge`)]
@@ -161,7 +165,9 @@ function showVictoryForLevel(lvl: number, moves: number) {
         h1(title),
         text,
         bigButton('Weiter', () => showSuggestion(proceed)),
-        button('Wiederholen', { style: 'font-size: 83%; margin-top: 6vw' }, () => showSuggestion(repeatLevel)),
+        button('Wiederholen', { style: 'font-size: 83%; margin-top: 6vw' }, () =>
+          showSuggestion(repeatLevel),
+        ),
       ),
     ),
   )
@@ -175,7 +181,9 @@ function endScreen() {
   blurToWidget(
     new TextWidget([
       h1('🎄 Frohe 🎄<br>Weih&shy;nachten'),
-      p('Du hast alle Level abge&shy;schlossen. Du kannst jetzt ein&shy;zelne Level wieder&shy;holen, wenn du willst.'),
+      p(
+        'Du hast alle Level abge&shy;schlossen. Du kannst jetzt ein&shy;zelne Level wieder&shy;holen, wenn du willst.',
+      ),
       bigButton('Übersicht', () => levelOverview()),
     ]),
   )

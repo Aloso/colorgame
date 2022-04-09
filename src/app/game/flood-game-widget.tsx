@@ -1,12 +1,12 @@
-import { GameConfig } from './levels'
-import { EventEmitter } from '../util/event-emitter'
-import { Widget } from '../dom/widgets'
 import { button, div } from '../dom/dom-helper'
+import { Widget } from '../dom/widgets'
+import { EventEmitter } from '../util/event-emitter'
 import { gameHeader } from './game-util'
+import { GameConfig } from './levels'
 
 export interface FloodGameConfig extends GameConfig {
-  type: 'flood-game',
-  colors: string[],
+  type: 'flood-game'
+  colors: string[]
 }
 
 export class FloodGameWidget implements Widget {
@@ -27,7 +27,7 @@ export class FloodGameWidget implements Widget {
     let color = fields[0].getAttribute('data-color')!
     let gameRunning = true
 
-    const buttons = config.colors.map(c => {
+    const buttons = config.colors.map((c) => {
       return button(null, { class: 'flood-btn', style: `background: ${c}` }, () => {
         if (!gameRunning) return
         if (c !== color) {
@@ -37,7 +37,7 @@ export class FloodGameWidget implements Widget {
           floodColor(fields, config.width, config.height, color, c)
 
           color = c
-          if (fields.every(f => f.getAttribute('data-color') === c)) {
+          if (fields.every((f) => f.getAttribute('data-color') === c)) {
             gameRunning = false
             fields[0].classList.remove('given')
             buttonDiv.remove()
@@ -51,16 +51,19 @@ export class FloodGameWidget implements Widget {
     contentDiv = div(fields, { class: 'flood-bg' })
     buttonDiv = div(buttons, { class: 'flood-controls' })
 
-    this.node = div([
-      gameHeader(num, config, movesElem),
-      contentDiv,
-      buttonDiv,
-    ], { class: 'widget game-widget' })
+    this.node = div([gameHeader(num, config, movesElem), contentDiv, buttonDiv], {
+      class: 'widget game-widget',
+    })
   }
 }
 
-
-function floodColor(fields: HTMLDivElement[], width: number, height: number, prev: string, newColor: string) {
+function floodColor(
+  fields: HTMLDivElement[],
+  width: number,
+  height: number,
+  prev: string,
+  newColor: string,
+) {
   const getItem = getItem2(fields, width, height)
 
   const neighbors: [number, number][] = [[0, 0]]
@@ -78,19 +81,24 @@ function floodColor(fields: HTMLDivElement[], width: number, height: number, pre
       [next[0] + 1, next[1]],
       [next[0] - 1, next[1]],
     ]
-    neighbors.push(...newNeighbors.filter((xy) => {
-      return getItem(xy)?.getAttribute('data-color') === prev
-    }))
+    neighbors.push(
+      ...newNeighbors.filter((xy) => {
+        return getItem(xy)?.getAttribute('data-color') === prev
+      }),
+    )
   }
 }
 
-function getItem2<T>(fields: T[], width: number, height: number): (xy: [number, number]) => T | null {
-  return (xy: [number, number]) => (xy[0] >= 0 && xy[1] >= 0 && xy[0] < width && xy[1] < height)
-    ? fields[xy[1] * width + xy[0]] || null
-    : null
+function getItem2<T>(
+  fields: T[],
+  width: number,
+  height: number,
+): (xy: [number, number]) => T | null {
+  return (xy: [number, number]) =>
+    xy[0] >= 0 && xy[1] >= 0 && xy[0] < width && xy[1] < height
+      ? fields[xy[1] * width + xy[0]] || null
+      : null
 }
-
-
 
 function makeFields(config: FloodGameConfig): HTMLDivElement[] {
   const res: HTMLDivElement[] = []

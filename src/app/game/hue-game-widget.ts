@@ -2,13 +2,13 @@ import { Color } from '../color/color'
 import { div } from '../dom/dom-helper'
 import { Widget } from '../dom/widgets'
 import { EventEmitter } from '../util/event-emitter'
-import { GameConfig } from './levels'
 import { gameHeader } from './game-util'
+import { GameConfig } from './levels'
 
 export interface HueGameConfig extends GameConfig {
-  type: 'hue-game',
-  corners: [Color<any>, Color<any>, Color<any>, Color<any>],
-  given: number[],
+  type: 'hue-game'
+  corners: [Color<any>, Color<any>, Color<any>, Color<any>]
+  given: number[]
 }
 
 export class HueGameWidget implements Widget {
@@ -37,7 +37,7 @@ export class HueGameWidget implements Widget {
         clicked = null
         if (isSorted(movable)) {
           gameRunning = false
-          fields.forEach(f => f.classList.remove('given'))
+          fields.forEach((f) => f.classList.remove('given'))
 
           setTimeout(() => this.victory.emit(moves), 1200)
         }
@@ -50,10 +50,9 @@ export class HueGameWidget implements Widget {
       }
     })
 
-    this.node = div([
-      gameHeader(num, config, movesElem),
-      div(fields),
-    ], { class: 'widget game-widget' })
+    this.node = div([gameHeader(num, config, movesElem), div(fields)], {
+      class: 'widget game-widget',
+    })
 
     setTimeout(() => {
       movable = shuffle(fields)
@@ -88,7 +87,7 @@ function toggle(a: HTMLDivElement, b: HTMLDivElement): Promise<void> {
 }
 
 function shuffle(array: HTMLDivElement[]): HTMLDivElement[] {
-  const fields = array.filter(div => !div.classList.contains('given'))
+  const fields = array.filter((div) => !div.classList.contains('given'))
 
   fields.forEach((field, i) => {
     field.setAttribute('data-i', '' + i)
@@ -102,7 +101,7 @@ function shuffle(array: HTMLDivElement[]): HTMLDivElement[] {
 }
 
 function isSorted(array: HTMLDivElement[]): boolean {
-  const numbers = array.map(div => +div.getAttribute('data-i')!)
+  const numbers = array.map((div) => +div.getAttribute('data-i')!)
 
   for (let i = 0, len = numbers.length - 1; i < len; i++) {
     if (numbers[i] > numbers[i + 1]) return false
@@ -110,8 +109,10 @@ function isSorted(array: HTMLDivElement[]): boolean {
   return true
 }
 
-
-function makeFields(config: HueGameConfig, onClick: (elem: HTMLDivElement) => void): HTMLDivElement[] {
+function makeFields(
+  config: HueGameConfig,
+  onClick: (elem: HTMLDivElement) => void,
+): HTMLDivElement[] {
   const c1 = config.corners[0].rgb
   const c2 = config.corners[1].rgb
   const c3 = config.corners[2].rgb
@@ -139,7 +140,6 @@ function makeFields(config: HueGameConfig, onClick: (elem: HTMLDivElement) => vo
       res.push(elem)
     }
   }
-  config.given.forEach(n => res[n].classList.add('given'))
+  config.given.forEach((n) => res[n].classList.add('given'))
   return res
 }
-

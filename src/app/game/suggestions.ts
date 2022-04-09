@@ -1,4 +1,4 @@
-import { bigButton, div, h1, p } from '../dom/dom-helper'
+import { bigButton, div, h1 } from '../dom/dom-helper'
 import { TextWidget } from '../dom/text-widget'
 import { blurToWidget } from '../dom/widgets'
 
@@ -33,7 +33,7 @@ const suggestions: Suggestion[] = [
   },
 ]
 
-const suggestionsShown = suggestions.map(s => localStorage[s.id + '_hint'] === 'shown')
+const suggestionsShown = suggestions.map((s) => localStorage[s.id + '_hint'] === 'shown')
 
 export function showSuggestion(then: () => void) {
   const nextIndex = suggestionsShown.indexOf(false)
@@ -42,11 +42,7 @@ export function showSuggestion(then: () => void) {
     suggestionsShown[nextIndex] = true
     localStorage[s.id + '_hint'] = 'shown'
 
-    blurToWidget(new TextWidget([
-      h1(s.title),
-      div(s.text),
-      bigButton('Weiter', then),
-    ]))
+    blurToWidget(new TextWidget([h1(s.title), div(s.text), bigButton('Weiter', then)]))
   } else {
     then()
   }

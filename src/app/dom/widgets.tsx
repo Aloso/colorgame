@@ -12,14 +12,13 @@ export interface Overlay extends Widget {
   isOverlay: true
 }
 
-
 let visibleWidgets: Widget[] = []
 
 const container = byId('app', HTMLElement)
 const overlays = byId('overlays', HTMLElement)
 
 export function showWidget(widget: Widget) {
-  visibleWidgets.forEach(v => v.onHide?.())
+  visibleWidgets.forEach((v) => v.onHide?.())
 
   container.innerHTML = ''
   overlays.innerHTML = ''
@@ -30,11 +29,11 @@ export function showWidget(widget: Widget) {
 }
 
 export function blurToWidget(widget: Widget) {
-  visibleWidgets.forEach(w => {
+  visibleWidgets.forEach((w) => {
     w.node.classList.add('blurring-out')
   })
   setTimeout(() => {
-    visibleWidgets.forEach(w => w.onHide?.())
+    visibleWidgets.forEach((w) => w.onHide?.())
     overlays.innerHTML = ''
 
     container.innerHTML = ''

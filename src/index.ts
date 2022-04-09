@@ -1,5 +1,5 @@
 import './index.scss'
 
-import { startScreen } from './app/app'
+import { StartScreen } from './app/app'
 
-startScreen()
+StartScreen()
