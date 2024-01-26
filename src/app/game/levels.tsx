@@ -1,33 +1,35 @@
+import { FunctionComponent } from 'react'
+
+import { BigButton } from '../../components/big'
+import { TextWidget as CTextWidget } from '../../components/TextWidget'
+import { GameId } from '../../state/state'
 import { HslColor } from '../color/hslColor'
 import { bigButton, h1, p } from '../dom/dom-helper'
 import { TextWidget } from '../dom/text-widget'
-import { blurToWidget } from '../dom/widgets'
+import { blurToWidget, Widget } from '../dom/widgets'
 import { FloodGameConfig } from './flood-game-widget'
 import { HueGameConfig } from './hue-game-widget'
 import { MemoryGameConfig } from './memory-game-widget'
 
 export interface GameConfig {
-  type: 'hue-game' | 'memory-game' | 'flood-game'
+  type: GameId
   id: string
 
   width: number
   height: number
 
-  onceBefore?: () => Promise<void>
+  tutorial?: (accept: () => void) => Widget
+  Tutorial?: FunctionComponent<TutorialProps>
   highScore?: number
 }
 
-export interface GameProps {
-  width: number
-  height: number
-
-  onceBefore?: () => Promise<void>
-  highScore?: number
+interface TutorialProps {
+  proceed(): void
 }
 
 export const levels: (HueGameConfig | MemoryGameConfig | FloodGameConfig)[] = [
   {
-    type: 'hue-game',
+    type: 'hue',
     id: 'hue-1',
 
     width: 5,
@@ -40,32 +42,38 @@ export const levels: (HueGameConfig | MemoryGameConfig | FloodGameConfig)[] = [
     ],
     given: [0, 1, 2, 3, 4, 5, 6, 7, 13, 14, 20, 21, 27, 28, 29, 30, 31, 32, 33, 34],
 
-    onceBefore: () =>
-      new Promise((resolve) =>
-        blurToWidget(
-          new TextWidget([
-            h1('Willkommen!'),
-            p(
-              'Dieses kleine Spiel ist mein dies&shy;jähriges Weihnachts&shy;geschenk. Ich hoffe, es macht dir Spaß!',
-            ),
-            bigButton('Weiter', () =>
-              blurToWidget(
-                new TextWidget([
-                  p(
-                    'Als ich eben etwas malen wollte, habe ich aus Versehen meine Farbkiste fallen gelassen, ' +
-                      'und alle Wasser&shy;farben sind über den Boden verteilt.',
-                  ),
-                  p('Kannst du die Farben wieder in die richtige Reihenfolge bringen?'),
-                  bigButton('Klar!', () => resolve()),
-                ]),
-              ),
-            ),
-          ]),
+    tutorial: (accept) =>
+      new TextWidget([
+        h1('Willkommen!'),
+        p(
+          'Dieses kleine Spiel ist mein dies&shy;jähriges Weihnachts&shy;geschenk. Ich hoffe, es macht dir Spaß!',
         ),
-      ),
+        bigButton('Weiter', () =>
+          blurToWidget(
+            new TextWidget([
+              p(
+                `Als ich eben etwas malen wollte, habe ich aus Versehen meine Farbkiste
+                fallen gelassen, und alle Wasser&shy;farben sind über den Boden verteilt.`,
+              ),
+              p('Kannst du die Farben wieder in die richtige Reihenfolge bringen?'),
+              bigButton('Klar!', accept),
+            ]),
+          ),
+        ),
+      ]),
+    Tutorial: ({ proceed }: TutorialProps) => (
+      <CTextWidget>
+        <p>
+          Als ich eben etwas malen wollte, habe ich aus Versehen meine Farbkiste fallen gelassen,
+          und alle Wasser&shy;farben sind über den Boden verteilt.
+        </p>
+        <p>Kannst du die Farben wieder in die richtige Reihenfolge bringen?</p>
+        <BigButton onClick={proceed}>Klar!</BigButton>
+      </CTextWidget>
+    ),
   },
   {
-    type: 'memory-game',
+    type: 'mem',
     id: 'mem-1',
 
     width: 4,
@@ -83,45 +91,59 @@ export const levels: (HueGameConfig | MemoryGameConfig | FloodGameConfig)[] = [
       '#ff00de',
     ],
 
-    onceBefore: () =>
-      new Promise((resolve) =>
-        blurToWidget(
-          new TextWidget([
-            h1('Memory'),
-            p('Auch meine buten Papiere sind durch&shy;einan&shy;der gera&shy;ten!'),
-            p(
-              'Ich habe jede Farbe zwei mal. Kannst du die Farb&shy;paare geord&shy;net auf&shy;sam&shy;meln?',
-            ),
-            bigButton('In Ordnung!', () => resolve()),
-          ]),
+    tutorial: (accept) =>
+      new TextWidget([
+        h1('Memory'),
+        p('Auch meine bunten Papiere sind durch&shy;einan&shy;der gera&shy;ten!'),
+        p(
+          'Ich habe jede Farbe zwei mal. Kannst du die Farb&shy;paare geord&shy;net auf&shy;sam&shy;meln?',
         ),
-      ),
+        bigButton('In Ordnung!', accept),
+      ]),
+    Tutorial: ({ proceed }: TutorialProps) => (
+      <CTextWidget>
+        <h1>Memory</h1>
+        <p>Auch meine bunten Papiere sind durch&shy;einan&shy;der gera&shy;ten!</p>
+        <p>
+          Ich habe jede Farbe zwei mal. Kannst du die Farb&shy;paare geord&shy;net
+          auf&shy;sam&shy;meln?
+        </p>
+        <BigButton onClick={proceed}>In Ordnung!</BigButton>
+      </CTextWidget>
+    ),
   },
   {
-    type: 'flood-game',
+    type: 'flood',
     id: 'flood-1',
 
     width: 10,
     height: 12,
     colors: ['#f02913', '#33cb00', '#2544cf', '#e55aff', '#ffff00', '#89e4ff'],
 
-    onceBefore: () =>
-      new Promise((resolve) =>
-        blurToWidget(
-          new TextWidget([
-            h1('Farbenflut'),
-            p('Färbe alle Felder in der gleichen Farbe!'),
-            p(
-              'Du startest links oben; wenn du unten auf eine Farbe tippst, ' +
-                'werden oben alle angren&shy;zen&shy;den Fel&shy;der mit der glei&shy;chen Farbe so ein&shy;ge&shy;färbt.',
-            ),
-            bigButton('Los!', () => resolve()),
-          ]),
+    tutorial: (accept) =>
+      new TextWidget([
+        h1('Farbenflut'),
+        p('Färbe alle Felder in der gleichen Farbe!'),
+        p(
+          'Du startest links oben; wenn du unten auf eine Farbe tippst, ' +
+            'werden oben alle angren&shy;zen&shy;den Fel&shy;der mit der glei&shy;chen Farbe so ein&shy;ge&shy;färbt.',
         ),
-      ),
+        bigButton('Los!', accept),
+      ]),
+    Tutorial: ({ proceed }: TutorialProps) => (
+      <CTextWidget>
+        <h1>Farbenflut</h1>
+        <p>Färbe alle Felder in der gleichen Farbe!</p>
+        <p>
+          Du startest links oben; wenn du unten auf eine Farbe tippst, werden oben alle
+          angren&shy;zen&shy;den Fel&shy;der mit der glei&shy;chen Farbe so ein&shy;ge&shy;färbt.
+        </p>
+        <BigButton onClick={proceed}>Los!</BigButton>
+      </CTextWidget>
+    ),
   },
   {
-    type: 'hue-game',
+    type: 'hue',
     id: 'hue-2',
 
     width: 6,
@@ -135,7 +157,7 @@ export const levels: (HueGameConfig | MemoryGameConfig | FloodGameConfig)[] = [
     given: [0, 1, 2, 3, 4, 5, 6, 7, 13, 14, 20, 21, 27, 28, 34, 35, 36, 37, 38, 39, 40, 41],
   },
   {
-    type: 'memory-game',
+    type: 'mem',
     id: 'mem-2',
 
     width: 4,
@@ -156,7 +178,7 @@ export const levels: (HueGameConfig | MemoryGameConfig | FloodGameConfig)[] = [
     ],
   },
   {
-    type: 'flood-game',
+    type: 'flood',
     id: 'flood-2',
 
     width: 11,
@@ -164,7 +186,7 @@ export const levels: (HueGameConfig | MemoryGameConfig | FloodGameConfig)[] = [
     colors: ['#f02913', '#33cb00', '#2544cf', '#e55aff', '#ffff00', '#89e4ff'],
   },
   {
-    type: 'hue-game',
+    type: 'hue',
     id: 'hue-3',
 
     width: 6,
@@ -178,7 +200,7 @@ export const levels: (HueGameConfig | MemoryGameConfig | FloodGameConfig)[] = [
     given: [0, 1, 2, 3, 4, 5, 6, 7, 13, 14, 20, 21, 27, 28, 34, 35, 36, 37, 38, 39, 40, 41],
   },
   {
-    type: 'memory-game',
+    type: 'mem',
     id: 'mem-3',
 
     width: 4,
@@ -199,7 +221,7 @@ export const levels: (HueGameConfig | MemoryGameConfig | FloodGameConfig)[] = [
     ],
   },
   {
-    type: 'flood-game',
+    type: 'flood',
     id: 'flood-3',
 
     width: 12,
@@ -207,7 +229,7 @@ export const levels: (HueGameConfig | MemoryGameConfig | FloodGameConfig)[] = [
     colors: ['#f02913', '#33cb00', '#2544cf', '#e55aff', '#ffff00', '#89e4ff'],
   },
   {
-    type: 'hue-game',
+    type: 'hue',
     id: 'hue-4',
 
     width: 6,
@@ -221,7 +243,7 @@ export const levels: (HueGameConfig | MemoryGameConfig | FloodGameConfig)[] = [
     given: [0, 1, 2, 3, 4, 5, 6, 7, 8, 15, 16, 23, 24, 31, 32, 39, 40, 41, 42, 43, 44, 45, 46, 47],
   },
   {
-    type: 'memory-game',
+    type: 'mem',
     id: 'mem-4',
 
     width: 4,
@@ -244,7 +266,7 @@ export const levels: (HueGameConfig | MemoryGameConfig | FloodGameConfig)[] = [
     ],
   },
   {
-    type: 'flood-game',
+    type: 'flood',
     id: 'flood-4',
 
     width: 13,
@@ -252,7 +274,7 @@ export const levels: (HueGameConfig | MemoryGameConfig | FloodGameConfig)[] = [
     colors: ['#f02913', '#33cb00', '#2544cf', '#e55aff', '#ffff00', '#89e4ff'],
   },
   {
-    type: 'hue-game',
+    type: 'hue',
     id: 'hue-5',
 
     width: 6,
@@ -266,7 +288,7 @@ export const levels: (HueGameConfig | MemoryGameConfig | FloodGameConfig)[] = [
     given: [0, 1, 2, 3, 4, 5, 6, 7, 8, 15, 16, 23, 24, 31, 32, 39, 40, 41, 42, 43, 44, 45, 46, 47],
   },
   {
-    type: 'memory-game',
+    type: 'mem',
     id: 'mem-5',
 
     width: 5,
@@ -290,7 +312,7 @@ export const levels: (HueGameConfig | MemoryGameConfig | FloodGameConfig)[] = [
     ],
   },
   {
-    type: 'flood-game',
+    type: 'flood',
     id: 'flood-5',
 
     width: 14,
@@ -298,7 +320,7 @@ export const levels: (HueGameConfig | MemoryGameConfig | FloodGameConfig)[] = [
     colors: ['#f02913', '#33cb00', '#2544cf', '#e55aff', '#ffff00', '#89e4ff'],
   },
   {
-    type: 'hue-game',
+    type: 'hue',
     id: 'hue-6',
 
     width: 6,
@@ -312,7 +334,7 @@ export const levels: (HueGameConfig | MemoryGameConfig | FloodGameConfig)[] = [
     given: [0, 1, 2, 3, 4, 5, 6, 7, 40, 41, 42, 43, 44, 45, 46, 47],
   },
   {
-    type: 'memory-game',
+    type: 'mem',
     id: 'mem-6',
 
     width: 4,
@@ -337,7 +359,7 @@ export const levels: (HueGameConfig | MemoryGameConfig | FloodGameConfig)[] = [
     ],
   },
   {
-    type: 'flood-game',
+    type: 'flood',
     id: 'flood-6',
 
     width: 15,
@@ -347,7 +369,7 @@ export const levels: (HueGameConfig | MemoryGameConfig | FloodGameConfig)[] = [
 
   // Difficulty: Impossible
   // {
-  //   type: 'hue-game',
+  //   type: 'hue',
   //   id: 'hue-5',
   //   width: 6,
   //   height: 8,

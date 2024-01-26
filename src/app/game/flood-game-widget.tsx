@@ -5,7 +5,7 @@ import { gameHeader } from './game-util'
 import { GameConfig } from './levels'
 
 export interface FloodGameConfig extends GameConfig {
-  type: 'flood-game'
+  type: 'flood'
   colors: string[]
 }
 
@@ -21,10 +21,7 @@ export class FloodGameWidget implements Widget {
 
     const fields = makeFields(config)
 
-    let contentDiv: HTMLElement
-    let buttonDiv: HTMLElement
-
-    let color = fields[0].getAttribute('data-color')!
+    let color = fields[0].getAttribute('data-color') ?? '#000000'
     let gameRunning = true
 
     const buttons = config.colors.map((c) => {
@@ -48,8 +45,8 @@ export class FloodGameWidget implements Widget {
       })
     })
 
-    contentDiv = div(fields, { class: 'flood-bg' })
-    buttonDiv = div(buttons, { class: 'flood-controls' })
+    const contentDiv = div(fields, { class: 'flood-bg' })
+    const buttonDiv = div(buttons, { class: 'flood-controls' })
 
     this.node = div([gameHeader(num, config, movesElem), contentDiv, buttonDiv], {
       class: 'widget game-widget',
@@ -67,19 +64,22 @@ function floodColor(
   const getItem = getItem2(fields, width, height)
 
   const neighbors: [number, number][] = [[0, 0]]
-  while (neighbors.length > 0) {
-    const next = neighbors.pop()!
-    const el = getItem(next)
+  for (;;) {
+    const next = neighbors.pop()
+    if (next == undefined) break
+    const [next0, next1] = next
+
+    const el = getItem([next0, next1])
     if (el != null) {
       el.style.background = newColor
       el.setAttribute('data-color', newColor)
     }
 
     const newNeighbors: [number, number][] = [
-      [next[0], next[1] + 1],
-      [next[0], next[1] - 1],
-      [next[0] + 1, next[1]],
-      [next[0] - 1, next[1]],
+      [next0, next1 + 1],
+      [next0, next1 - 1],
+      [next0 + 1, next1],
+      [next0 - 1, next1],
     ]
     neighbors.push(
       ...newNeighbors.filter((xy) => {

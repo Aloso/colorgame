@@ -96,8 +96,8 @@ function startLevel(lvl: number) {
   const level = levels[lvl]
   if (level == null) throw new Error('Game is null')
 
-  if (level.onceBefore && localStorage[`${level.id}_before`] == null) {
-    level.onceBefore().then(() => {
+  if (level.tutorial && localStorage[`${level.id}_before`] == null) {
+    level.tutorial(() => {
       localStorage[`${level.id}_before`] = 'true'
       startLevel(lvl)
     })
@@ -107,9 +107,9 @@ function startLevel(lvl: number) {
   location.hash = `#lvl-${level.id}`
 
   const game =
-    level.type === 'hue-game'
+    level.type === 'hue'
       ? new HueGameWidget(lvl, level)
-      : level.type === 'memory-game'
+      : level.type === 'mem'
       ? new MemoryGameWidget(lvl, level)
       : new FloodGameWidget(lvl, level)
 

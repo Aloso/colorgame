@@ -1,3 +1,5 @@
+import { ButtonHTMLAttributes, ReactNode } from 'react'
+
 /**
  * Returns the element with the specified ID and the specified class, or throws an exception
  *
@@ -7,7 +9,7 @@
  * const app = byId("app", HtmlDivElement);
  * ```
  */
-export function byId<T extends HTMLElement>(id: string, clazz: (new() => T)): T {
+export function byId<T extends HTMLElement>(id: string, clazz: new () => T): T {
   const el = document.getElementById(id)
   if (!(el instanceof clazz)) throw new Error(`Expected instance of ${clazz.name}, got ${el}`)
   return el
@@ -35,9 +37,10 @@ export function el(type: string, content: HtmlContent, attrs?: IHtmlAttrs): HTML
   }
 
   if (attrs) {
-    for (const key in attrs) if (attrs.hasOwnProperty(key)) {
-      elem.setAttribute(key, attrs[key] as string)
-    }
+    for (const key in attrs)
+      if (attrs.hasOwnProperty(key)) {
+        elem.setAttribute(key, attrs[key] as string)
+      }
   }
   return elem
 }
@@ -57,13 +60,20 @@ export function frag(...contents: HtmlContent[]): DocumentFragment {
   return elem
 }
 
-export function button(content: HtmlContent, attrs: IHtmlAttrs, action: (e: MouseEvent) => void): HTMLButtonElement {
+export function button(
+  content: HtmlContent,
+  attrs: IHtmlAttrs,
+  action: (e: MouseEvent) => void,
+): HTMLButtonElement {
   const elem = el('button', content, attrs) as HTMLButtonElement
   elem.addEventListener('click', action)
   return elem
 }
 
-export function bigButton(content: HtmlContent, action: (e: MouseEvent) => void): HTMLButtonElement {
+export function bigButton(
+  content: HtmlContent,
+  action: (e: MouseEvent) => void,
+): HTMLButtonElement {
   const elem = el('button', content, { class: 'big' }) as HTMLButtonElement
   elem.addEventListener('click', action)
   return elem

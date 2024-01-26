@@ -5,7 +5,7 @@ import { gameHeader, shuffle } from './game-util'
 import { GameConfig } from './levels'
 
 export interface MemoryGameConfig extends GameConfig {
-  type: 'memory-game'
+  type: 'mem'
   colors: string[]
 }
 

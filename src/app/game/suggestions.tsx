@@ -1,9 +1,10 @@
+import { SuggestionId } from '../../state/state'
 import { bigButton, div, h1 } from '../dom/dom-helper'
 import { TextWidget } from '../dom/text-widget'
 import { blurToWidget } from '../dom/widgets'
 
 export interface Suggestion {
-  id: string
+  id: SuggestionId
   title: string
   text: string
 }
