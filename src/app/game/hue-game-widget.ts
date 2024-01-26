@@ -74,13 +74,14 @@ function toggle(a: HTMLDivElement, b: HTMLDivElement): Promise<void> {
     b.style.left = x1
     b.style.top = y1
 
-    const i1 = a.getAttribute('data-i')!
-    const i2 = b.getAttribute('data-i')!
-    a.setAttribute('data-i', i2)
-    b.setAttribute('data-i', i1)
+    const i1 = a.dataset.i
+    const i2 = b.dataset.i
+    a.dataset.i = i2
+    b.dataset.i = i1
 
     setTimeout(() => {
-      a.style.zIndex = b.style.zIndex = ''
+      a.style.zIndex = ''
+      b.style.zIndex = ''
       resolve()
     }, 300)
   })
@@ -101,7 +102,7 @@ function shuffle(array: HTMLDivElement[]): HTMLDivElement[] {
 }
 
 function isSorted(array: HTMLDivElement[]): boolean {
-  const numbers = array.map((div) => +div.getAttribute('data-i')!)
+  const numbers = array.map((div) => Number(div.dataset.i))
 
   for (let i = 0, len = numbers.length - 1; i < len; i++) {
     if (numbers[i] > numbers[i + 1]) return false

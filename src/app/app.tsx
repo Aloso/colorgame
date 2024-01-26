@@ -1,31 +1,24 @@
-import { bigButton, button, div, el, frag, h1, p, span } from './dom/dom-helper'
-import { TextWidget } from './dom/text-widget'
-import { blurToWidget, overlayWidget, showWidget } from './dom/widgets'
+import { BigButton } from './dom/dom-helper'
+import { blurToReactWidget, blurToWidget, overlayReactWidget, showReactWidget, showWidget } from './dom/widgets'
 import { FloodGameWidget } from './game/flood-game-widget'
 import { HueGameWidget } from './game/hue-game-widget'
 import { levels, setHighScore } from './game/levels'
 import { MemoryGameWidget } from './game/memory-game-widget'
 import { showSuggestion } from './game/suggestions'
 import { randomVictoryMessage, shortVictoryMessage } from './game/victory'
-import { fullscreenButton } from './util/fullscreen'
-
-const fsButton = fullscreenButton('Vollbild', 'Vollbild beenden', 'start-fs-button')
-
-const levelFsButton = fullscreenButton('⛶', '⛶', 'heading-fs-button')
+import { FullscreenButton } from './util/fullscreen'
 
 export function StartScreen() {
   if (location.hash === '') {
-    showWidget(
-      new TextWidget(
-        frag(
-          h1('Farbwirbel'),
-          bigButton('Start', () => introduction()),
-          fsButton,
-        ),
-      ),
+    showReactWidget(
+      <>
+        <h1>Farbwirbel</h1>
+        <BigButton onClick={() => introduction()}>Start</BigButton>
+        <FullscreenButton normalText="Vollbild" fsText="Vollbild beenden" className="start-fs-button" />
+      </>,
     )
   } else {
-    showWidget(new TextWidget(h1('Farbwirbel')))
+    showReactWidget(<h1>Farbwirbel</h1>)
 
     setTimeout(() => {
       const hash = location.hash
@@ -63,28 +56,23 @@ export function introduction() {
 }
 
 function levelOverview() {
-  const levelsEl = levels.map((l, i) =>
-    button(
-      [
-        div(`${i + 1}`, { class: 'lvl-id' }),
-        div(l.highScore != null ? `${l.highScore} Züge` : '', { class: 'high-score' }),
-      ],
-      { class: 'lvl' },
-      () => startLevel(i),
-    ),
-  )
-
   location.hash = `#levels`
 
-  blurToWidget(
-    new TextWidget(
-      frag(
-        el('h2', frag(span('Alle Level', { style: 'flex-grow: 1' }), levelFsButton), {
-          style: 'display: flex; width: 100%',
-        }),
-        div(levelsEl, { class: 'lvls' }),
-      ),
-    ),
+  blurToReactWidget(
+    <>
+      <h2 style={{ display: 'flex', width: '100%' }}>
+        <span style={{ flexGrow: 1 }}>Alle Level</span>
+        <FullscreenButton normalText="⛶" fsText="⛶" className="heading-fs-button" />
+      </h2>
+      <div className="lvls">
+        {levels.map((l, i) => (
+          <button className="lvl" onClick={() => startLevel(i)}>
+            <div className="lvl-id">{i + 1}</div>
+            <div className="high-score">{l.highScore != null ? `${l.highScore} Züge` : ''}</div>
+          </button>
+        ))}
+      </div>
+    </>,
   )
 }
 
@@ -110,8 +98,8 @@ function startLevel(lvl: number) {
     level.type === 'hue-game'
       ? new HueGameWidget(lvl, level)
       : level.type === 'memory-game'
-      ? new MemoryGameWidget(lvl, level)
-      : new FloodGameWidget(lvl, level)
+        ? new MemoryGameWidget(lvl, level)
+        : new FloodGameWidget(lvl, level)
 
   blurToWidget(game)
   game.victory.on((moves: number) => showVictoryForLevel(lvl, moves))
@@ -128,19 +116,7 @@ function showVictoryForLevel(lvl: number, moves: number) {
     localStorage.completedLevels = completedLevels = lvl + 1
   }
 
-  const title = isNewRecord
-    ? 'Neuer Rekord!'
-    : showLvl0Msg
-    ? shortVictoryMessage()
-    : randomVictoryMessage()
-
-  const text = isNewRecord
-    ? [p(`${moves} Züge`), p(`Bisheriger Rekord: ${previousRecord} Züge`)]
-    : showLvl0Msg
-    ? p(
-        `Mit deinen Adler&shy;augen war das wohl kein Problem für dich 😉. Aber der nächste Level ist nicht ganz so einfach!`,
-      )
-    : null
+  const title = isNewRecord ? 'Neuer Rekord!' : showLvl0Msg ? shortVictoryMessage() : randomVictoryMessage()
 
   function proceed() {
     if (isGameComplete()) {
@@ -159,17 +135,25 @@ function showVictoryForLevel(lvl: number, moves: number) {
     startLevel(lvl)
   }
 
-  overlayWidget(
-    new TextWidget(
-      frag(
-        h1(title),
-        text,
-        bigButton('Weiter', () => showSuggestion(proceed)),
-        button('Wiederholen', { style: 'font-size: 83%; margin-top: 6vw' }, () =>
-          showSuggestion(repeatLevel),
-        ),
-      ),
-    ),
+  overlayReactWidget(
+    <>
+      <h1 dangerouslySetInnerHTML={{ __html: title }}></h1>
+      {isNewRecord ? (
+        <>
+          <p>{moves} Züge</p>
+          <p>Bisheriger Rekord: {previousRecord} Züge</p>
+        </>
+      ) : showLvl0Msg ? (
+        <p>
+          Mit deinen Adler&shy;augen war das wohl kein Problem für dich 😉. Aber der nächste Level ist nicht ganz so
+          einfach!
+        </p>
+      ) : null}
+      <BigButton onClick={() => showSuggestion(proceed)}>Weiter</BigButton>
+      <button onClick={() => showSuggestion(repeatLevel)} style={{ fontSize: '83%', marginTop: '6vw' }}>
+        Wiederholen
+      </button>
+    </>,
   )
 }
 
@@ -178,13 +162,17 @@ function endScreen() {
 
   location.hash = `#end`
 
-  blurToWidget(
-    new TextWidget([
-      h1('🎄 Frohe 🎄<br>Weih&shy;nachten'),
-      p(
-        'Du hast alle Level abge&shy;schlossen. Du kannst jetzt ein&shy;zelne Level wieder&shy;holen, wenn du willst.',
-      ),
-      bigButton('Übersicht', () => levelOverview()),
-    ]),
+  blurToReactWidget(
+    <>
+      <h1>
+        🎄 Frohe 🎄
+        <br />
+        Weih&shy;nachten
+      </h1>
+      <p>
+        Du hast alle Level abge&shy;schlossen. Du kannst jetzt ein&shy;zelne Level wieder&shy;holen, wenn du willst.
+      </p>
+      <BigButton onClick={() => levelOverview()}>Übersicht</BigButton>
+    </>,
   )
 }

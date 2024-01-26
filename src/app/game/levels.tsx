@@ -1,7 +1,6 @@
 import { HslColor } from '../color/hslColor'
-import { bigButton, h1, p } from '../dom/dom-helper'
-import { TextWidget } from '../dom/text-widget'
-import { blurToWidget } from '../dom/widgets'
+import { BigButton } from '../dom/dom-helper'
+import { blurToReactWidget } from '../dom/widgets'
 import { FloodGameConfig } from './flood-game-widget'
 import { HueGameConfig } from './hue-game-widget'
 import { MemoryGameConfig } from './memory-game-widget'
@@ -42,25 +41,27 @@ export const levels: (HueGameConfig | MemoryGameConfig | FloodGameConfig)[] = [
 
     onceBefore: () =>
       new Promise((resolve) =>
-        blurToWidget(
-          new TextWidget([
-            h1('Willkommen!'),
-            p(
-              'Dieses kleine Spiel ist mein dies&shy;jähriges Weihnachts&shy;geschenk. Ich hoffe, es macht dir Spaß!',
-            ),
-            bigButton('Weiter', () =>
-              blurToWidget(
-                new TextWidget([
-                  p(
-                    'Als ich eben etwas malen wollte, habe ich aus Versehen meine Farbkiste fallen gelassen, ' +
-                      'und alle Wasser&shy;farben sind über den Boden verteilt.',
-                  ),
-                  p('Kannst du die Farben wieder in die richtige Reihenfolge bringen?'),
-                  bigButton('Klar!', () => resolve()),
-                ]),
-              ),
-            ),
-          ]),
+        blurToReactWidget(
+          <>
+            <h1>Willkommen!</h1>
+            <p>Dieses kleine Spiel ist mein dies&shy;jähriges Weihnachts&shy;geschenk. Ich hoffe, es macht dir Spaß!</p>
+            <BigButton
+              onClick={() =>
+                blurToReactWidget(
+                  <>
+                    <p>
+                      Als ich eben etwas malen wollte, habe ich aus Versehen meine Farbkiste fallen gelassen, und alle
+                      Wasser&shy;farben sind über den Boden verteilt.
+                    </p>
+                    <p>Kannst du die Farben wieder in die richtige Reihenfolge bringen?</p>
+                    <BigButton onClick={() => resolve()}>Klar!</BigButton>
+                  </>,
+                )
+              }
+            >
+              Weiter
+            </BigButton>
+          </>,
         ),
       ),
   },
@@ -70,30 +71,21 @@ export const levels: (HueGameConfig | MemoryGameConfig | FloodGameConfig)[] = [
 
     width: 4,
     height: 5,
+    // prettier-ignore
     colors: [
-      '#ff0000',
-      '#ff6e00',
-      '#ffb100',
-      '#fffa00',
-      '#87ff00',
-      '#00ffc0',
-      '#00b2ff',
-      '#0049ff',
-      '#7700ff',
-      '#ff00de',
+      '#ff0000', '#ff6e00', '#ffb100', '#fffa00', '#87ff00',
+      '#00ffc0', '#00b2ff', '#0049ff', '#7700ff', '#ff00de',
     ],
 
     onceBefore: () =>
       new Promise((resolve) =>
-        blurToWidget(
-          new TextWidget([
-            h1('Memory'),
-            p('Auch meine buten Papiere sind durch&shy;einan&shy;der gera&shy;ten!'),
-            p(
-              'Ich habe jede Farbe zwei mal. Kannst du die Farb&shy;paare geord&shy;net auf&shy;sam&shy;meln?',
-            ),
-            bigButton('In Ordnung!', () => resolve()),
-          ]),
+        blurToReactWidget(
+          <>
+            <h1>Memory</h1>
+            <p>Auch meine buten Papiere sind durch&shy;einan&shy;der gera&shy;ten!</p>
+            <p>Ich habe jede Farbe zwei mal. Kannst du die Farb&shy;paare geord&shy;net auf&shy;sam&shy;meln?</p>
+            <BigButton onClick={() => resolve()}>In Ordnung!</BigButton>
+          </>,
         ),
       ),
   },
@@ -107,16 +99,16 @@ export const levels: (HueGameConfig | MemoryGameConfig | FloodGameConfig)[] = [
 
     onceBefore: () =>
       new Promise((resolve) =>
-        blurToWidget(
-          new TextWidget([
-            h1('Farbenflut'),
-            p('Färbe alle Felder in der gleichen Farbe!'),
-            p(
-              'Du startest links oben; wenn du unten auf eine Farbe tippst, ' +
-                'werden oben alle angren&shy;zen&shy;den Fel&shy;der mit der glei&shy;chen Farbe so ein&shy;ge&shy;färbt.',
-            ),
-            bigButton('Los!', () => resolve()),
-          ]),
+        blurToReactWidget(
+          <>
+            <h1>Farbenflut</h1>
+            <p>Färbe alle Felder in der gleichen Farbe!</p>
+            <p>
+              Du startest links oben; wenn du unten auf eine Farbe tippst, werden oben alle angren&shy;zen&shy;den
+              Fel&shy;der mit der glei&shy;chen Farbe so ein&shy;ge&shy;färbt.
+            </p>
+            <BigButton onClick={() => resolve()}>Los!</BigButton>
+          </>,
         ),
       ),
   },
@@ -140,19 +132,11 @@ export const levels: (HueGameConfig | MemoryGameConfig | FloodGameConfig)[] = [
 
     width: 4,
     height: 6,
+    // prettier-ignore
     colors: [
-      '#ff0000',
-      '#ff6e00',
-      '#ffb100',
-      '#fffa00',
-      '#95ff00',
-      '#00ff35',
-      '#00f4ff',
-      '#0090ff',
-      '#0059ff',
-      '#5800ff',
-      '#8b00ff',
-      '#ff00de',
+      '#ff0000', '#ff6e00', '#ffb100', '#fffa00',
+      '#95ff00', '#00ff35', '#00f4ff', '#0090ff',
+      '#0059ff', '#5800ff', '#8b00ff', '#ff00de',
     ],
   },
   {
@@ -183,19 +167,11 @@ export const levels: (HueGameConfig | MemoryGameConfig | FloodGameConfig)[] = [
 
     width: 4,
     height: 6,
+    // prettier-ignore
     colors: [
-      '#d90000',
-      '#d95a00',
-      '#d99400',
-      '#d9d200',
-      '#82d900',
-      '#00d92b',
-      '#00d2d9',
-      '#007bd9',
-      '#004cd9',
-      '#4800d9',
-      '#7400d9',
-      '#d900bf',
+      '#d90000', '#d95a00', '#d99400', '#d9d200',
+      '#82d900', '#00d92b', '#00d2d9', '#007bd9',
+      '#004cd9', '#4800d9', '#7400d9', '#d900bf',
     ],
   },
   {
@@ -226,21 +202,10 @@ export const levels: (HueGameConfig | MemoryGameConfig | FloodGameConfig)[] = [
 
     width: 4,
     height: 7,
+    // prettier-ignore
     colors: [
-      '#ff0000',
-      '#ff6e00',
-      '#ffb100',
-      '#fffa00',
-      '#95ff00',
-      '#00ff35',
-      '#00f4ff',
-      '#0090ff',
-      '#0059ff',
-      '#5800ff',
-      '#8b00ff',
-      '#ff00de',
-      '#636363',
-      '#c7c7c7',
+      '#ff0000', '#ff6e00', '#ffb100', '#fffa00', '#95ff00', '#00ff35', '#00f4ff',
+      '#0090ff', '#0059ff', '#5800ff', '#8b00ff', '#ff00de', '#636363', '#c7c7c7',
     ],
   },
   {
@@ -257,12 +222,7 @@ export const levels: (HueGameConfig | MemoryGameConfig | FloodGameConfig)[] = [
 
     width: 6,
     height: 8,
-    corners: [
-      new HslColor(300, 80, 30),
-      new HslColor(240, 80, 60),
-      new HslColor(60, 80, 60),
-      new HslColor(0, 80, 60),
-    ],
+    corners: [new HslColor(300, 80, 30), new HslColor(240, 80, 60), new HslColor(60, 80, 60), new HslColor(0, 80, 60)],
     given: [0, 1, 2, 3, 4, 5, 6, 7, 8, 15, 16, 23, 24, 31, 32, 39, 40, 41, 42, 43, 44, 45, 46, 47],
   },
   {
@@ -271,22 +231,11 @@ export const levels: (HueGameConfig | MemoryGameConfig | FloodGameConfig)[] = [
 
     width: 5,
     height: 6,
+    // prettier-ignore
     colors: [
-      '#ff3333',
-      '#ff8833',
-      '#ffbe33',
-      '#fff833',
-      '#adff33',
-      '#33ff5c',
-      '#33f8ff',
-      '#33a7ff',
-      '#3355ff',
-      '#7733ff',
-      '#b833ff',
-      '#ff38c8',
-      '#000000',
-      '#686868',
-      '#dcdcdc',
+      '#ff3333', '#ff8833', '#ffbe33', '#fff833', '#adff33',
+      '#33ff5c', '#33f8ff', '#33a7ff', '#3355ff', '#7733ff',
+      '#b833ff', '#ff38c8', '#000000', '#686868', '#dcdcdc',
     ],
   },
   {
@@ -317,23 +266,12 @@ export const levels: (HueGameConfig | MemoryGameConfig | FloodGameConfig)[] = [
 
     width: 4,
     height: 8,
+    // prettier-ignore
     colors: [
-      '#ff3333',
-      '#ff8833',
-      '#ffbe33',
-      '#fff833',
-      '#adff33',
-      '#33ff5c',
-      '#33f8ff',
-      '#33a7ff',
-      '#3355ff',
-      '#7733ff',
-      '#b833ff',
-      '#ff38c8',
-      '#000000',
-      '#575757',
-      '#d1d1d1',
-      '#ffffff',
+      '#ff3333', '#ff8833', '#ffbe33', '#fff833',
+      '#adff33', '#33ff5c', '#33f8ff', '#33a7ff',
+      '#3355ff', '#7733ff', '#b833ff', '#ff38c8',
+      '#000000', '#575757', '#d1d1d1', '#ffffff',
     ],
   },
   {

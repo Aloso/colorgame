@@ -1,3 +1,5 @@
+import { ReactElement } from 'react'
+
 import { button } from '../dom/dom-helper'
 
 export function enterFullscreen(elem: HTMLElement) {
@@ -71,4 +73,39 @@ export function fullscreenButton(
   onFullscreenExited(() => (btn.innerHTML = normalText))
 
   return btn
+}
+
+interface FullscreenButtonProps {
+  normalText: string
+  fsText: string
+  className: string
+}
+
+export function FullscreenButton({
+  normalText,
+  fsText,
+  className,
+}: FullscreenButtonProps): ReactElement | null {
+  if (!supportsFullscreen(document.documentElement) || usesWholeScreen()) return null
+
+  let fs = document.fullscreenElement != null
+
+  return (
+    <button
+      className={className}
+      onClick={() => {
+        fs = !fs
+        if (fs) enterFullscreen(document.documentElement)
+        else exitFullscreen()
+      }}
+      ref={(btn) => {
+        if (btn) {
+          onFullscreenEntered(() => (btn.innerHTML = fsText))
+          onFullscreenExited(() => (btn.innerHTML = normalText))
+        }
+      }}
+    >
+      {fs ? fsText : normalText}
+    </button>
+  )
 }

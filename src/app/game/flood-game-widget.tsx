@@ -21,10 +21,7 @@ export class FloodGameWidget implements Widget {
 
     const fields = makeFields(config)
 
-    let contentDiv: HTMLElement
-    let buttonDiv: HTMLElement
-
-    let color = fields[0].getAttribute('data-color')!
+    let color = fields[0].dataset.color!
     let gameRunning = true
 
     const buttons = config.colors.map((c) => {
@@ -48,8 +45,8 @@ export class FloodGameWidget implements Widget {
       })
     })
 
-    contentDiv = div(fields, { class: 'flood-bg' })
-    buttonDiv = div(buttons, { class: 'flood-controls' })
+    const contentDiv = div(fields, { class: 'flood-bg' })
+    const buttonDiv = div(buttons, { class: 'flood-controls' })
 
     this.node = div([gameHeader(num, config, movesElem), contentDiv, buttonDiv], {
       class: 'widget game-widget',

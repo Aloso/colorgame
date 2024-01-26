@@ -1,4 +1,6 @@
+import { ReactElement } from 'react'
 import { byId } from './dom-helper'
+import { ReactWidget } from './react-widget'
 
 export interface Widget {
   readonly name: string
@@ -65,4 +67,16 @@ export function closeOverlay(overlay: Overlay) {
       oldWidgets[i].onHide?.()
     }
   }
+}
+
+export function showReactWidget(elem: ReactElement) {
+  showWidget(new ReactWidget(elem))
+}
+
+export function blurToReactWidget(elem: ReactElement) {
+  blurToWidget(new ReactWidget(elem))
+}
+
+export function overlayReactWidget(elem: ReactElement) {
+  overlayWidget(new ReactWidget(elem))
 }
